@@ -108,6 +108,10 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
 .grp-t{margin:18px 0 2px;font-family:var(--display);font-size:1.15rem}
 .grp-t:first-child{margin-top:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bad-soft);font-size:.9rem}
+.newday{border-color:var(--gold);background:linear-gradient(135deg,var(--gold-soft),transparent 70%),var(--panel)}
+.nd-q{margin:2px 0 6px;font-family:var(--display);font-size:1.5rem;line-height:1.15}
+.nd-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
+.nd-list .agota{color:var(--bad)} .nd-list .sin{color:var(--warn)}
 .demo{background:var(--warn-soft);color:var(--warn);text-align:center;font-size:.85rem;padding:8px 16px}
 @media (max-width:420px){ .seg3 button{padding:8px 8px;font-size:.76rem} .r{gap:10px} }
 </style>
@@ -159,6 +163,18 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
   </header>
 
   <main class="wrap">
+    <section class="card newday" id="newDay" hidden>
+      <h2>Nuevo día</h2>
+      <p class="nd-q">¿Volvió a llegar todo?</p>
+      <p class="muted" style="margin:0 0 8px">La última vez quedó así:</p>
+      <ul class="nd-list" id="ndList"></ul>
+      <div class="row-actions">
+        <button class="btn btn-main" type="button" id="ndYes">Sí, todo disponible</button>
+        <button class="btn" type="button" id="ndKeep">No, sigue igual</button>
+      </div>
+      <p class="muted" style="margin:10px 0 0;font-size:.82rem">Mientras no respondas, los clientes siguen viendo lo de la última vez.</p>
+    </section>
+
     <section class="card">
       <h2>Resumen</h2>
       <div class="summary" id="summary"></div>
@@ -214,9 +230,11 @@ try{ const t = JSON.parse(localStorage.getItem("emily-theme")); if(t) document.d
 function logoFor(){ const light = document.documentElement.dataset.theme==="light" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: light)").matches); return light ? "img/logo-dark.webp" : "img/logo.webp"; }
 $("#loginLogo").src = logoFor(); $("#hdLogo").src = logoFor();
 
+
 /* =================== Guardar =================== */
 function setSave(text, cls){ const el=$("#saveState"); el.textContent=text; el.className="save"+(cls?" "+cls:""); }
 function persist(){
+  STOCK.dia = hoyBogota(); // cualquier cambio confirma cómo está el local hoy
   render();
   if(demo){ setSave("Demostración (sin guardar)"); return; }
   setSave("Guardando…");
@@ -235,7 +253,18 @@ function persist(){
 
 /* =================== Pintar =================== */
 let tab = "ing";
+function hasOuts(st){ return Object.keys(st.ing).length + Object.values(st.prod).filter(Boolean).length + Object.values(st.cat).filter(Boolean).length > 0; }
+function renderNewDay(){
+  const show = hasOuts(STOCK) && STOCK.dia !== hoyBogota();
+  $("#newDay").hidden = !show; if(!show) return;
+  const L = [];
+  Object.entries(STOCK.cat).filter(([,v])=>v).forEach(([k])=>{ const c=MENU.find(x=>x.id===k); if(c) L.push(`<li class="agota">${esc(c.name)}: apagada</li>`); });
+  Object.entries(STOCK.ing).forEach(([k,v])=>{ const g=CATALOG.find(x=>x.key===k); L.push(`<li class="${v}">${esc(g?g.label:k)}: ${v==="agota"?"se acabó":"se sirve sin"}</li>`); });
+  Object.entries(STOCK.prod).filter(([,v])=>v).forEach(([k])=>{ const it=findItem(k); if(it) L.push(`<li class="agota">${esc(prodLabel(it))}: agotado</li>`); });
+  $("#ndList").innerHTML = L.join("");
+}
 function render(){
+  renderNewDay();
   const ingOut = Object.entries(STOCK.ing).filter(([,v])=>v==="agota").length;
   const ingSin = Object.entries(STOCK.ing).filter(([,v])=>v==="sin").length;
   const catOff = Object.values(STOCK.cat).filter(Boolean).length;
@@ -300,6 +329,8 @@ document.addEventListener("click", e=>{
   if(t.closest("#resetNo")){ $("#resetConfirm").hidden=true; return; }
   if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"" }; $("#resetConfirm").hidden=true; persist(); return; }
   if(t.closest("#demoBtn")){ startApp(true); return; }
+  if(t.closest("#ndYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"", dia:"" }; persist(); return; }
+  if(t.closest("#ndKeep")){ persist(); return; }
   if(t.closest("#googleBtn")){ googleLogin(); return; }
   if(t.closest("#logoutBtn")){ if(demo){ location.reload(); return; } firebase.auth().signOut(); return; }
 });
@@ -342,10 +373,13 @@ async function googleLogin(){
 let unsub = null;
 function startApp(isDemo){
   demo = isDemo;
+  if(isDemo){ const ayer = new Date(Date.now()-864e5); STOCK = { ing:{"carne desmechada":"agota","tomate":"sin"}, prod:{}, cat:{arepas:true}, aviso:"", avisoFecha:"", dia: new Intl.DateTimeFormat("en-CA",{timeZone:"America/Bogota"}).format(ayer) }; }
   $("#loginView").hidden = true; $("#appView").hidden = false; $("#demoBar").hidden = !demo;
   setSave(demo ? "Demostración (sin guardar)" : "Al día");
   render();
 }
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden && !$("#appView").hidden) renderNewDay(); });
+setInterval(()=>{ if(!$("#appView").hidden) renderNewDay(); }, 60000);
 (async function(){
   if(!firebaseOn()){ $("#setupMsg").hidden=false; $("#loginFields").hidden=true; return; }
   try{

@@ -17,7 +17,7 @@ const stockRef = fb => fb.firestore().collection("tienda").doc("estado");
 const hoyBogota = () => new Intl.DateTimeFormat("en-CA",{ timeZone:"America/Bogota" }).format(new Date());
 const cleanStock = d => {
   const vigente = !!(d && d.aviso && d.avisoFecha === hoyBogota());
-  return { ing:(d&&d.ing)||{}, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "" };
+  return { ing:(d&&d.ing)||{}, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "", dia:(d&&d.dia)||"" };
 };
 async function watchStock(cb){
   try{
