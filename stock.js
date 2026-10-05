@@ -17,7 +17,10 @@ const stockRef = fb => fb.firestore().collection("tienda").doc("estado");
 const hoyBogota = () => new Intl.DateTimeFormat("en-CA",{ timeZone:"America/Bogota" }).format(new Date());
 const cleanStock = d => {
   const vigente = !!(d && d.aviso && d.avisoFecha === hoyBogota());
-  return { ing:(d&&d.ing)||{}, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "", dia:(d&&d.dia)||"" };
+  // Los nombres viejos de ingredientes (p. ej. "carne") se pasan al nombre actual ("carne desmechada")
+  const ing = {};
+  Object.entries((d&&d.ing)||{}).forEach(([k,v]) => { const nk = typeof stockKey==="function" ? stockKey(k) : k; if(v==="agota" || !ing[nk]) ing[nk] = v; });
+  return { ing, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "", dia:(d&&d.dia)||"" };
 };
 async function watchStock(cb){
   try{
