@@ -4,9 +4,9 @@ service cloud.firestore {
     // Inventario del día: todos lo pueden leer, solo el local lo puede cambiar.
     match /tienda/estado {
       allow read: if true;
-      // Cambia este correo por el de la cuenta que crees para el local en Firebase Authentication.
+      // Correos que pueden cambiar el inventario. Para agregar al local: ['alizz.mejia03@gmail.com', 'correo-del-local@gmail.com']
       allow write: if request.auth != null
-                   && request.auth.token.email in ['CORREO-DEL-LOCAL@gmail.com'];
+                   && request.auth.token.email in ['alizz.mejia03@gmail.com'];
     }
     match /{document=**} {
       allow read, write: if false;
