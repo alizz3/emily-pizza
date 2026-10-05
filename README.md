@@ -18,7 +18,8 @@ Sitio estático, sin build: se despliega tal cual en Vercel.
 | `404.html` | Página de error con regreso al menú |
 | `vercel.json` | URLs limpias y cabeceras de seguridad |
 | `robots.txt`, `sitemap.xml` | Buscadores (el panel no se indexa) |
-| `manifest.webmanifest`, `sw.js` | App instalable en el celular |
+| `manifest.webmanifest`, `sw.js` | App instalable de la tienda |
+| `admin.webmanifest` | App instalable del panel (ícono dorado) |
 | `img/` | Logo, fotos, íconos e imagen para compartir |
 
 ## Cambios rápidos

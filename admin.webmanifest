@@ -1,0 +1,18 @@
+{
+  "id": "/admin",
+  "name": "Panel Emily Pizza",
+  "short_name": "Panel Emily",
+  "description": "Panel del local para marcar lo que se acabó y el aviso del día.",
+  "lang": "es-CO",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070606",
+  "theme_color": "#070606",
+  "icons": [
+    { "src": "img/panel-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/panel-icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/panel-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

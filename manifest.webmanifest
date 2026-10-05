@@ -3,6 +3,7 @@
   "short_name": "Emily Pizza",
   "description": "Menú de Emily Pizza. Arma tu pedido y envíalo por WhatsApp.",
   "lang": "es-CO",
+  "id": "/",
   "start_url": "/?app=1",
   "scope": "/",
   "display": "standalone",
