@@ -20,8 +20,25 @@ const cleanStock = d => {
   // Los nombres viejos de ingredientes (p. ej. "carne") se pasan al nombre actual ("carne desmechada")
   const ing = {};
   Object.entries((d&&d.ing)||{}).forEach(([k,v]) => { const nk = typeof stockKey==="function" ? stockKey(k) : k; if(v==="agota" || !ing[nk]) ing[nk] = v; });
-  return { ing, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "", dia:(d&&d.dia)||"" };
+  const hoy = hoyBogota();
+  const programados = Array.isArray(d && d.programados) ? d.programados
+    .filter(p => p && typeof p.t==="string" && p.t.trim() && (Array.isArray(p.dias) ? p.dias.length : (typeof p.f==="string" && p.f >= hoy)))
+    .slice(0, 40) : [];
+  return { ing, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "", dia:(d&&d.dia)||"",
+           cerradoFecha: (d && d.cerradoFecha===hoy) ? hoy : "", programados };
 };
+// Día de la semana en Bogotá (0 = domingo)
+const diaSemanaBogota = () => ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(new Intl.DateTimeFormat("en-US",{ timeZone:"America/Bogota", weekday:"short" }).format(new Date()));
+// "Hoy no abrimos" activado desde el panel
+const cerradoHoy = st => !!(st && st.cerradoFecha && st.cerradoFecha === hoyBogota());
+// Aviso que se ve hoy: el escrito para hoy, o si no hay, el programado para hoy
+function avisoHoy(st){
+  if(!st) return "";
+  if(st.aviso && st.avisoFecha === hoyBogota()) return st.aviso;
+  const hoy = hoyBogota(), dow = diaSemanaBogota();
+  const p = (st.programados||[]).find(x => x.f === hoy) || (st.programados||[]).find(x => Array.isArray(x.dias) && x.dias.includes(dow));
+  return p ? p.t : "";
+}
 async function watchStock(cb){
   try{
     const fb = await firebaseReady(false); if(!fb) return false;

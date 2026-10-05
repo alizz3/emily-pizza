@@ -84,18 +84,19 @@ function bogotaNow(){
 }
 const hourLabel = h => h===12 ? "12 m." : (h>12 ? (h-12)+" p. m." : h+" a. m.");
 const range = d => `${hourLabel(CONFIG.hours[d][0])} – ${hourLabel(CONFIG.hours[d][1])}`;
-function isOpen(){ const n=bogotaNow(); const [o,c]=CONFIG.hours[n.day]; return n.h>=o && n.h<c; }
+function isOpen(){ if(cerradoHoy(STOCK)) return false; const n=bogotaNow(); const [o,c]=CONFIG.hours[n.day]; return n.h>=o && n.h<c; }
 function renderStatus(){
   const n=bogotaNow(); const [o,c]=CONFIG.hours[n.day];
   const el=$("#status"), tx=$("#statusText");
-  if(n.h>=o && n.h<c){ el.className="status open"; tx.innerHTML=`<b>Abierto</b> · hasta las ${hourLabel(c)}`; }
+  if(cerradoHoy(STOCK)){ el.className="status closed"; tx.innerHTML=`<b>Hoy no abrimos</b> · volvemos mañana ${hourLabel(CONFIG.hours[(n.day+1)%7][0])}`; }
+  else if(n.h>=o && n.h<c){ el.className="status open"; tx.innerHTML=`<b>Abierto</b> · hasta las ${hourLabel(c)}`; }
   else { el.className="status closed"; tx.innerHTML = n.h<o ? `<b>Cerrado</b> · abre hoy ${hourLabel(o)}` : `<b>Cerrado</b> · abre mañana ${hourLabel(CONFIG.hours[(n.day+1)%7][0])}`; }
   const wk=[1,2,3,4,5].includes(n.day), cls = on => on?' class="today"':"";
   $("#hoursList").innerHTML = `<dt${cls(wk)}>Lunes a viernes</dt><dd${cls(wk)}>${range(1)}</dd><dt${cls(!wk)}>Sábados y domingos</dt><dd${cls(!wk)}>${range(0)}</dd>`;
 }
 function openHours(){
   sheetMode="hours"; const n=bogotaNow();
-  $("#sheetKicker").textContent = isOpen() ? "Abierto ahora" : "Cerrado ahora";
+  $("#sheetKicker").textContent = cerradoHoy(STOCK) ? "Hoy no abrimos" : isOpen() ? "Abierto ahora" : "Cerrado ahora";
   $("#sheetTitle").textContent = "Horario de atención";
   $("#sheetBody").innerHTML = `<div class="week">${[1,2,3,4,5,6,0].map(d=>`<div class="${d===n.day?"on":""}"><span>${DAYS[d]}</span><span>${range(d)}</span></div>`).join("")}</div><a class="addr muted" target="_blank" rel="noopener" href="${CONFIG.mapLink}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>${esc(CONFIG.address)}</span></a>`;
   $("#sheetFoot").innerHTML = `<button class="btn btn-ghost" type="button" style="flex:1" data-close>Listo</button>`;
@@ -125,7 +126,8 @@ function renderCatsFavs(){
     const sub = it.parts ? it.parts.join(" + ") : (it.desc||"");
     return `<button class="fav${st.out?" out":""}" type="button" data-id="${it.id}"${st.out?` data-out="${esc(st.reason)}"`:""}><span class="ph"><img src="${imgSrc(it.img||c.img)}" alt="" loading="lazy"></span><span class="in"><b>${esc(title)}</b><small>${esc(sub.length>70?sub.slice(0,68)+"…":sub)}</small><span class="row"><span class="price">${fmt(it.price)}</span>${st.out?'<span class="sold">Agotado hoy</span>':'<span class="add" aria-hidden="true">+</span>'}</span></span></button>`;
   }).join("");
-  const av=$("#aviso"); av.hidden=!STOCK.aviso; av.innerHTML = STOCK.aviso ? `<b>Hoy</b>${esc(STOCK.aviso)}` : "";
+  const txt = avisoHoy(STOCK) || (cerradoHoy(STOCK) ? "Hoy no abrimos. ¡Te esperamos mañana!" : "");
+  const av=$("#aviso"); av.hidden=!txt; av.innerHTML = txt ? `<b>Hoy</b>${esc(txt)}` : "";
 }
 function showSlide(i){
   const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
@@ -363,7 +365,10 @@ function openCart(){ sheetMode="cart"; $("#sheetKicker").textContent="Tu pedido"
 function renderCart(){
   if(!cart.length){ $("#sheetBody").innerHTML=`<p style="color:var(--muted);text-align:center;padding:30px 0">Tu pedido está vacío. Agrega algo del menú.</p>`; $("#sheetFoot").innerHTML=`<button class="btn btn-ghost" type="button" style="flex:1" data-close>Volver al menú</button>`; return; }
   let h = `<div>${cart.map((l,i)=>`<div class="line"><div><h3>${esc(l.name)}</h3>${l.details.length?`<ul>${l.details.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}</div><span class="price">${fmt(lineTotal(l))}</span><div class="ctrl"><div class="stepper"><button type="button" data-cstep="-1" data-i="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-cstep="1" data-i="${i}" aria-label="Agregar uno">+</button></div><button class="link" type="button" data-del="${i}">Eliminar</button></div></div>`).join("")}</div><div class="totals"><span>Total</span><b>${fmt(cartTotal())}</b></div>`;
-  if(!isOpen()) h += `<p class="notice">Ahora estamos cerrados. Puedes enviar tu pedido y te respondemos al abrir.</p>`;
+  const avisoTxt = avisoHoy(STOCK);
+  if(avisoTxt) h += `<p class="aviso cart-aviso"><b>Hoy</b>${esc(avisoTxt)}</p>`;
+  if(cerradoHoy(STOCK)) h += `<p class="notice">Hoy no abrimos, así que no podemos recibir pedidos. Tu carrito queda guardado para mañana.</p>`;
+  else if(!isOpen()) h += `<p class="notice">Ahora estamos cerrados. Puedes enviar tu pedido y te respondemos al abrir.</p>`;
   h += `<div class="field"><label for="oName">Tu nombre</label><input type="text" id="oName" value="${esc(order.name)}" placeholder="¿A nombre de quién?" autocomplete="name"><p class="err" id="nameErr" hidden>Escribe tu nombre para que sepamos de quién es el pedido.</p></div>
     <div class="field"><span class="lbl">¿Cómo lo quieres?</span><div class="seg">${[["Para recoger","Paso a recogerlo"],["Para comer en el local","Lo como allá"]].map(([v,t])=>`<label><input type="radio" name="mode" value="${v}" ${order.mode===v?"checked":""}>${t}</label>`).join("")}</div></div>
     <div class="field"><label for="oTime">¿A qué hora pasas?</label><input type="time" id="oTime" value="${esc(order.time)}"><span style="font-size:.8rem;color:var(--dim)">Déjalo vacío si es lo antes posible.</span></div>
@@ -371,10 +376,10 @@ function renderCart(){
     <div class="field"><label for="oNote">Comentarios (opcional)</label><textarea id="oNote" placeholder="Algo más que debamos saber">${esc(order.note)}</textarea></div>
     <div class="field"><span class="lbl">Así llegará tu mensaje</span><div class="preview" id="preview"></div></div>`;
   $("#sheetBody").innerHTML=h;
-  $("#sheetFoot").innerHTML=`<button class="btn btn-ghost" type="button" id="copyMsg" style="flex:none">Copiar</button><a class="btn wa" id="sendWa" href="#" target="_blank" rel="noopener"><span>Enviar por WhatsApp</span><span>${fmt(cartTotal())}</span></a>`;
+  $("#sheetFoot").innerHTML=`<button class="btn btn-ghost" type="button" id="copyMsg" style="flex:none">Copiar</button>${cerradoHoy(STOCK) ? `<button class="btn" type="button" disabled style="flex:1;opacity:.6">Hoy no abrimos</button>` : `<a class="btn wa" id="sendWa" href="#" target="_blank" rel="noopener"><span>Enviar por WhatsApp</span><span>${fmt(cartTotal())}</span></a>`}`;
   refreshPreview();
 }
-function refreshPreview(){ const p=$("#preview"); if(!p) return; const m=buildMessage(); p.textContent=m; $("#sendWa").href=waLink(m); }
+function refreshPreview(){ const p=$("#preview"); if(!p) return; const m=buildMessage(); p.textContent=m; const w=$("#sendWa"); if(w) w.href=waLink(m); }
 
 /* =================== EVENTOS =================== */
 function eventMessage(){
@@ -423,7 +428,7 @@ document.addEventListener("click", e=>{
     const cs=t.closest("[data-cstep]"); if(cs){ const i=+cs.dataset.i; cart[i].qty += +cs.dataset.cstep; if(cart[i].qty<1) cart.splice(i,1); saveCart(); updateBar(); renderCart(); return; }
     const del=t.closest("[data-del]"); if(del){ cart.splice(+del.dataset.del,1); saveCart(); updateBar(); renderCart(); return; }
     if(t.closest("#copyMsg")){ copyText(buildMessage(),"Pedido copiado"); return; }
-    if(t.closest("#sendWa")){ if(!order.name.trim()){ e.preventDefault(); $("#nameErr").hidden=false; $("#oName").focus(); return; } refreshPreview(); toast("Abriendo WhatsApp…"); return; }
+    if(t.closest("#sendWa")){ if(cerradoHoy(STOCK)){ e.preventDefault(); toast("Hoy no abrimos. ¡Te esperamos mañana!"); return; } if(!order.name.trim()){ e.preventDefault(); $("#nameErr").hidden=false; $("#oName").focus(); return; } refreshPreview(); toast("Abriendo WhatsApp…"); return; }
   }
 });
 document.addEventListener("change", e=>{
@@ -535,7 +540,7 @@ function jumpToHash(){
 addEventListener("hashchange", jumpToHash);
 
 function applyStock(st){
-  STOCK = st; store.set("emily-stock", st);
+  STOCK = st; store.set("emily-stock", st); renderStatus(); if(sheetMode==="cart") renderCart();
   if(menuReady) renderMenu(); renderCatsFavs(); applySearch($("#q").value); spy();
 }
 watchStock(applyStock);

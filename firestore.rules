@@ -12,13 +12,15 @@ service cloud.firestore {
 
     // Revisa que lo que se guarda tenga la forma correcta (validación del lado del servidor).
     function inventarioValido(d) {
-      return d.keys().hasOnly(['ing', 'prod', 'cat', 'aviso', 'avisoFecha', 'dia', 'actualizado'])
+      return d.keys().hasOnly(['ing', 'prod', 'cat', 'aviso', 'avisoFecha', 'dia', 'cerradoFecha', 'programados', 'actualizado'])
           && d.ing is map  && d.ing.size()  <= 200
           && d.prod is map && d.prod.size() <= 300
           && d.cat is map  && d.cat.size()  <= 30
           && d.aviso is string && d.aviso.size() <= 140
           && d.avisoFecha is string && d.avisoFecha.size() <= 10
           && d.dia is string && d.dia.size() <= 10
+          && d.get('cerradoFecha', '') is string && d.get('cerradoFecha', '').size() <= 10
+          && d.get('programados', []) is list && d.get('programados', []).size() <= 40
           && d.actualizado == request.time;
     }
 

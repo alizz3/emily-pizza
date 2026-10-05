@@ -202,7 +202,7 @@ const refItem = ([cid,name]) => MENU.find(c=>c.id===cid).items.find(i=>i.name===
 // Lo que llega del panel: { ing:{clave:"agota"|"sin"}, prod:{id:true}, cat:{id:true}, aviso:"" }
 //   "agota" = todo lo que lleve ese ingrediente sale como agotado
 //   "sin"   = el producto se vende igual, pero sin ese ingrediente
-let STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"", dia:"" };
+let STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"", dia:"", cerradoFecha:"", programados:[] };
 const ING_ALIAS = {
   "carne":"carne desmechada",   // en la carta "carne" junto a "pollo desmechado" es la misma carne desmechada
   "una carne":"carne de hamburguesa", "dos carnes":"carne de hamburguesa", "1 carne de hamburguesa":"carne de hamburguesa",

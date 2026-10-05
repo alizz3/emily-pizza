@@ -114,6 +114,19 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
 .grp-t{margin:18px 0 2px;font-family:var(--display);font-size:1.15rem}
 .grp-t:first-child{margin-top:0}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bad-soft);font-size:.9rem}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chipb{border:1px solid var(--line-2);background:var(--panel-2);border-radius:999px;padding:7px 12px;font-size:.84rem;text-align:left}
+.chipb:hover{border-color:var(--gold)}
+.chipb[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);font-weight:600}
+.closed-sw[aria-checked="true"]{background:var(--bad-soft)}
+.closed-sw[aria-checked="true"]::after{left:25px;background:var(--bad)}
+.closed-sw[aria-checked="false"]{background:var(--panel-2)}
+.closed-sw[aria-checked="false"]::after{left:3px;background:var(--dim)}
+.prog-form{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.seg2,.days{display:flex;flex-wrap:wrap;gap:6px}
+.days .chipb{min-width:44px;text-align:center}
+input[type=date]{width:100%;background:var(--panel-2);border:1px solid var(--line-2);border-radius:12px;padding:11px 13px;font-size:1rem}
+.del{border:0;background:none;color:var(--bad);font-weight:600;font-size:.85rem;padding:6px}
 .newday{border-color:var(--gold);background:linear-gradient(135deg,var(--gold-soft),transparent 70%),var(--panel)}
 .nd-q{margin:2px 0 6px;font-family:var(--display);font-size:1.5rem;line-height:1.15}
 .nd-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
@@ -202,9 +215,35 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
     </section>
 
     <section class="card">
+      <div class="r" style="padding-top:0">
+        <div class="info"><div class="name">Hoy no abrimos</div><div class="sub">La página dice que hoy está cerrado y no deja enviar pedidos. Se apaga solo a medianoche.</div></div>
+        <button type="button" class="sw closed-sw" role="switch" id="closedSw" aria-checked="false" aria-label="Hoy no abrimos"></button>
+      </div>
+    </section>
+
+    <section class="card">
       <h2>Aviso del día</h2>
-      <p class="muted" style="margin:0 0 10px">Sale arriba en la página y se borra solo a medianoche. Déjalo vacío para no mostrar nada.</p>
-      <textarea id="aviso" rows="2" maxlength="140" placeholder="Ej.: Hoy no hay carne desmechada, todo sale con pollo"></textarea>
+      <p class="muted" style="margin:0 0 10px">Sale arriba en la página y en el carrito antes de enviar. Se borra solo a medianoche.</p>
+      <textarea id="aviso" rows="2" maxlength="140" placeholder="Escribe un aviso o toca uno de los de abajo"></textarea>
+      <div class="presets" id="presets"></div>
+      <p class="muted" id="avisoProg" style="margin:8px 0 0;font-size:.84rem" hidden></p>
+    </section>
+
+    <section class="card">
+      <h2>Avisos programados</h2>
+      <p class="muted" style="margin:0 0 10px">Déjalos listos para un día o para todas las semanas. Si un día escribes un aviso arriba, ese manda.</p>
+      <div class="list" id="progList"></div>
+      <div class="prog-form">
+        <textarea id="progText" rows="2" maxlength="140" placeholder="Ej.: Martes de hamburguesa doble"></textarea>
+        <div class="seg2" role="group" aria-label="Cuándo">
+          <button type="button" class="chipb" data-ptype="semana" aria-pressed="true">Cada semana</button>
+          <button type="button" class="chipb" data-ptype="fecha" aria-pressed="false">Un solo día</button>
+        </div>
+        <div class="days" id="progDays"></div>
+        <input type="date" id="progDate" hidden>
+        <p class="err" id="progErr" hidden></p>
+        <button class="btn btn-main" type="button" id="progAdd">Programar aviso</button>
+      </div>
     </section>
 
     <section class="card" data-panel="ing">
@@ -249,6 +288,7 @@ $("#loginLogo").src = logoFor(); $("#hdLogo").src = logoFor();
 function setSave(text, cls){ const el=$("#saveState"); el.textContent=text; el.className="save"+(cls?" "+cls:""); }
 function persist(){
   STOCK.dia = hoyBogota(); // cualquier cambio confirma cómo está el local hoy
+  STOCK.programados = (STOCK.programados||[]).filter(p => Array.isArray(p.dias) || p.f >= STOCK.dia);
   render();
   if(demo){ setSave("Demostración (sin guardar)"); return; }
   setSave("Guardando…");
@@ -278,15 +318,16 @@ function renderNewDay(){
   $("#ndList").innerHTML = L.join("");
 }
 function render(){
-  renderNewDay();
+  renderNewDay(); renderProg();
   const ingOut = Object.entries(STOCK.ing).filter(([,v])=>v==="agota").length;
   const ingSin = Object.entries(STOCK.ing).filter(([,v])=>v==="sin").length;
   const catOff = Object.values(STOCK.cat).filter(Boolean).length;
   const allItems = MENU.flatMap(c=>c.items);
   const prodOut = allItems.filter(it=>itemStatus(it).out).length;
-  $("#summary").innerHTML = (ingOut+ingSin+catOff+prodOut)===0
+  const closedPill = cerradoHoy(STOCK) ? `<span class="pill bad">Hoy no abrimos</span>` : "";
+  $("#summary").innerHTML = closedPill + ((ingOut+ingSin+catOff+prodOut)===0
     ? `<span class="pill ok">Todo disponible</span>`
-    : `${prodOut?`<span class="pill bad">${prodOut} de ${allItems.length} productos agotados</span>`:""}${ingOut?`<span class="pill bad">${ingOut} ingrediente${ingOut>1?"s":""} se acabó</span>`:""}${ingSin?`<span class="pill warn">${ingSin} se sirve${ingSin>1?"n":""} sin</span>`:""}${catOff?`<span class="pill bad">${catOff} categoría${catOff>1?"s":""} apagada${catOff>1?"s":""}</span>`:""}`;
+    : `${prodOut?`<span class="pill bad">${prodOut} de ${allItems.length} productos agotados</span>`:""}${ingOut?`<span class="pill bad">${ingOut} ingrediente${ingOut>1?"s":""} se acabó</span>`:""}${ingSin?`<span class="pill warn">${ingSin} se sirve${ingSin>1?"n":""} sin</span>`:""}${catOff?`<span class="pill bad">${catOff} categoría${catOff>1?"s":""} apagada${catOff>1?"s":""}</span>`:""}`);
   const badge = (el,n) => { el.hidden = !n; el.textContent = n; };
   badge($("#nIng"), ingOut+ingSin); badge($("#nCat"), catOff); badge($("#nProd"), Object.values(STOCK.prod).filter(Boolean).length);
   if(document.activeElement !== $("#aviso")) $("#aviso").value = STOCK.aviso || "";
@@ -341,14 +382,67 @@ document.addEventListener("click", e=>{
   if(ps && !ps.disabled){ const k=ps.dataset.prod; if(STOCK.prod[k]) delete STOCK.prod[k]; else STOCK.prod[k]=true; persist(); return; }
   if(t.closest("#resetBtn")){ $("#resetConfirm").hidden=false; return; }
   if(t.closest("#resetNo")){ $("#resetConfirm").hidden=true; return; }
-  if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"" }; $("#resetConfirm").hidden=true; persist(); return; }
-  if(t.closest("#ndYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"", dia:"" }; persist(); return; }
+  if(t.closest("#resetYes")){ STOCK = { ...STOCK, ing:{}, prod:{}, cat:{}, cerradoFecha:"" }; $("#resetConfirm").hidden=true; persist(); return; }
+  if(t.closest("#ndYes")){ STOCK = { ...STOCK, ing:{}, prod:{}, cat:{}, cerradoFecha:"" }; persist(); return; }
   if(t.closest("#ndKeep")){ persist(); return; }
   if(t.closest("#googleBtn")){ googleLogin(); return; }
   if(t.closest("#logoutBtn")){ if(demo){ location.reload(); return; } firebase.auth().signOut(); return; }
 });
+/* =================== Avisos, cerrado y programados =================== */
+const PRESETS = [
+  "Hoy no hay carne desmechada, todo sale con pollo desmechado",
+  "Hay mucho pedido: la espera es de unos 30 minutos",
+  "Hoy abrimos a las 5 p. m.",
+  "Hoy cerramos temprano, a las 9 p. m.",
+  "Hoy 2x1 en perros sencillos hasta las 7 p. m.",
+  "Hoy combo con gaseosa gratis",
+  "Nuevo en la carta: limonada de coco",
+  "Hoy festivo abrimos desde el mediodía"
+];
+const DOW = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const DOW_LARGO = ["domingos","lunes","martes","miércoles","jueves","viernes","sábados"];
+let progType = "semana", progDays = new Set();
+$("#presets").innerHTML = PRESETS.map(p=>`<button type="button" class="chipb" data-preset="${esc(p)}">${esc(p)}</button>`).join("");
+$("#progDays").innerHTML = [1,2,3,4,5,6,0].map(d=>`<button type="button" class="chipb" data-dow="${d}" aria-pressed="false">${DOW[d]}</button>`).join("");
+function setAviso(txt){ STOCK.aviso = txt.trim(); STOCK.avisoFecha = STOCK.aviso ? hoyBogota() : ""; persist(); }
+function cuando(p){
+  if(Array.isArray(p.dias)){ const d=[...p.dias].sort((a,b)=>((a+6)%7)-((b+6)%7)); return d.length===7 ? "Todos los días" : "Todos los " + d.map(x=>DOW_LARGO[x]).join(", ").replace(/, ([^,]*)$/," y $1"); }
+  const dt = new Date(p.f+"T12:00"); return dt.toLocaleDateString("es-CO",{ weekday:"long", day:"numeric", month:"long" });
+}
+function renderProg(){
+  const list = STOCK.programados || [];
+  $("#progList").innerHTML = list.length ? list.map((p,i)=>`<div class="r"><div class="info"><div class="name">${esc(p.t)}</div><div class="sub">${esc(cuando(p))}</div></div><button type="button" class="del" data-pdel="${i}">Quitar</button></div>`).join("")
+    : `<p class="muted" style="margin:0">Todavía no hay avisos programados.</p>`;
+  const manual = STOCK.aviso && STOCK.avisoFecha===hoyBogota(), auto = avisoHoy(STOCK);
+  $("#avisoProg").hidden = !( !manual && auto );
+  $("#avisoProg").textContent = (!manual && auto) ? `Hoy se está mostrando el programado: “${auto}”` : "";
+  $("#closedSw").setAttribute("aria-checked", cerradoHoy(STOCK));
+  document.querySelectorAll("[data-ptype]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.ptype===progType));
+  document.querySelectorAll("[data-dow]").forEach(b=>b.setAttribute("aria-pressed", progDays.has(+b.dataset.dow)));
+  $("#progDays").hidden = progType!=="semana"; $("#progDate").hidden = progType!=="fecha";
+}
+document.addEventListener("click", e=>{
+  const t=e.target;
+  const pr=t.closest("[data-preset]"); if(pr){ $("#aviso").value = pr.dataset.preset; setAviso(pr.dataset.preset); $("#aviso").focus(); return; }
+  if(t.closest("#closedSw")){ STOCK.cerradoFecha = cerradoHoy(STOCK) ? "" : hoyBogota(); persist(); return; }
+  const pt=t.closest("[data-ptype]"); if(pt){ progType=pt.dataset.ptype; renderProg(); return; }
+  const dw=t.closest("[data-dow]"); if(dw){ const d=+dw.dataset.dow; progDays.has(d)?progDays.delete(d):progDays.add(d); renderProg(); return; }
+  const pd=t.closest("[data-pdel]"); if(pd){ STOCK.programados.splice(+pd.dataset.pdel,1); persist(); return; }
+  if(t.closest("#progAdd")){
+    const txt=$("#progText").value.trim(), err=$("#progErr"); err.hidden=true;
+    if(!txt){ err.textContent="Escribe el aviso."; err.hidden=false; return; }
+    let item;
+    if(progType==="semana"){ if(!progDays.size){ err.textContent="Elige al menos un día de la semana."; err.hidden=false; return; } item={ t:txt, dias:[...progDays] }; }
+    else { const f=$("#progDate").value; if(!f || f < hoyBogota()){ err.textContent="Elige una fecha de hoy en adelante."; err.hidden=false; return; } item={ t:txt, f }; }
+    if((STOCK.programados||[]).length >= 40){ err.textContent="Máximo 40 avisos programados. Quita alguno."; err.hidden=false; return; }
+    STOCK.programados = [...(STOCK.programados||[]), item];
+    $("#progText").value=""; progDays.clear(); $("#progDate").value="";
+    persist(); return;
+  }
+});
+
 let avisoT;
-$("#aviso").addEventListener("input", e=>{ clearTimeout(avisoT); avisoT=setTimeout(()=>{ STOCK.aviso = e.target.value.trim(); STOCK.avisoFecha = STOCK.aviso ? hoyBogota() : ""; persist(); }, 600); });
+$("#aviso").addEventListener("input", e=>{ clearTimeout(avisoT); avisoT=setTimeout(()=>setAviso(e.target.value), 600); });
 $("#ingQ").addEventListener("input", renderIng);
 
 $("#loginForm").addEventListener("submit", async e=>{
