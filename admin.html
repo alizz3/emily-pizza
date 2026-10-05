@@ -176,7 +176,7 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
         <span><b>Se acabó:</b> todo lo que lo lleve sale agotado.</span>
       </div>
       <input type="search" id="ingQ" placeholder="Buscar ingrediente" aria-label="Buscar ingrediente" style="margin:10px 0 4px">
-      <div class="list" id="ingList"></div>
+      <div id="ingList"></div>
     </section>
 
     <section class="card" data-panel="cat" hidden>
@@ -241,7 +241,7 @@ function render(){
 const openWho = new Set();
 function renderIng(){
   const q = norm($("#ingQ").value.trim());
-  $("#ingList").innerHTML = CATALOG.filter(g=>!q || norm(g.label).includes(q)).map(g=>{
+  const row = g=>{
     const st = STOCK.ing[g.key] || "hay";
     const items = [...g.items].map(findItem);
     const who = openWho.has(g.key) ? `<div class="who">${items.map(prodLabel).map(esc).join(" · ")}</div>` : "";
@@ -251,7 +251,12 @@ function renderIng(){
         <button type="button" class="sin" data-ing="${esc(g.key)}" data-v="sin" aria-pressed="${st==="sin"}">Sin él</button>
         <button type="button" class="agota" data-ing="${esc(g.key)}" data-v="agota" aria-pressed="${st==="agota"}">Se acabó</button>
       </div></div>`;
-  }).join("") || `<p class="muted">No hay ingredientes con ese nombre.</p>`;
+  };
+  const shown = CATALOG.filter(g=>!q || norm(g.label).includes(q));
+  const comida = shown.filter(g=>g.group==="comida"), jugos = shown.filter(g=>g.group==="jugos");
+  $("#ingList").innerHTML = (comida.length ? `<h3 class="grp-t">Ingredientes</h3><div class="list">${comida.map(row).join("")}</div>` : "")
+    + (jugos.length ? `<h3 class="grp-t" style="margin-top:22px">Frutas para jugos</h3><div class="list">${jugos.map(row).join("")}</div>` : "")
+    || `<p class="muted">No hay ingredientes con ese nombre.</p>`;
 }
 function renderCat(){
   $("#catList").innerHTML = MENU.map(c=>`<div class="r"><img src="${imgSrcA(c.img)}" alt=""><div class="info"><div class="name">${esc(c.name)}</div><div class="sub">${c.items.length} producto${c.items.length>1?"s":""}</div></div>

@@ -8,7 +8,7 @@ const CONFIG = {
   qrNequi: "",            // ej.: "img/qr-nequi.png"
   qrBreb: "",             // ej.: "img/qr-breb.png"
   combo: { price: 8500, label: "Arma tu combo", desc: "1 porción de papa + 1 gaseosa 350 ml" },
-  vegetales: ["Lechuga","Tomate","Cebolla"],   // qué trae "vegetales" (confirmar con el local)
+  vegetales: ["Lechuga","Tomate"],   // qué trae "vegetales" (las hamburguesas no llevan cebolla)
   mostrarPagos: false,   // cambiar a true cuando estén los QR de Nequi y Bre-B
   hours: { 0:[12,23], 1:[15,23], 2:[15,23], 3:[15,23], 4:[15,23], 5:[15,23], 6:[12,23] }, // 0=domingo, hora de Bogotá
   // Carrusel del inicio: [categoría, título, texto, imagen]
@@ -249,7 +249,8 @@ const lockedIdx = list => new Set(list.map((g,i)=>ingState(g)==="sin"?i:-1).filt
 function ingredientCatalog(){
   const map = new Map();
   const add = (label, it) => { const k = stockKey(label); if(!map.has(k)) map.set(k, { key:k, label: ING_LABEL[k] || cap(label.replace(/^(una|un|dos|tres|1|2|3|doble)\s+/i,"")), items:new Set() }); if(it) map.get(k).items.add(it.id); };
-  MENU.forEach(c => c.items.forEach(it => { itemIngs(it).forEach(g => add(g, it)); if(it.pickFlavor) c.flavors.forEach(f => add(f, it)); }));
-  return [...map.values()].sort((a,b)=>a.label.localeCompare(b.label,"es"));
+  const fruits = new Set();
+  MENU.forEach(c => c.items.forEach(it => { itemIngs(it).forEach(g => add(g, it)); if(it.pickFlavor) c.flavors.forEach(f => { add(f, it); fruits.add(stockKey(f)); }); }));
+  return [...map.values()].map(g => ({ ...g, group: fruits.has(g.key) ? "jugos" : "comida" })).sort((a,b)=>a.label.localeCompare(b.label,"es"));
 }
 if(typeof module!=="undefined") module.exports = { MENU, CONFIG, PIZZA_FLAVORS, itemStatus, ingredientCatalog, stockKey, lockedIdx, setStock:s=>{ STOCK=s; } };
