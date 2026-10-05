@@ -50,6 +50,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .login img{width:170px;margin:0 auto}
 .login h1{margin:0;font-family:var(--display);font-weight:500;font-size:1.8rem}
 .err{color:var(--bad);font-size:.9rem;margin:0}
+.or{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:.85rem}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line-2)}
 .setup{text-align:left;border:1px solid var(--line-2);border-radius:14px;padding:14px 16px;background:var(--panel);font-size:.9rem}
 .setup ol{margin:8px 0 0;padding-left:18px;color:var(--muted)}
 
@@ -127,6 +129,8 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
         <input type="password" id="pass" placeholder="Contraseña" autocomplete="current-password" required>
         <p class="err" id="loginErr" hidden></p>
         <button class="btn btn-main" type="submit" id="loginBtn">Entrar</button>
+        <div class="or"><span>o</span></div>
+        <button class="btn" type="button" id="googleBtn"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>Entrar con Google</button>
       </div>
     </div>
     <button class="btn" type="button" id="demoBtn">Ver demostración</button>
@@ -218,7 +222,10 @@ function persist(){
       const fb = await firebaseReady(true);
       await stockRef(fb).set({ ...STOCK, actualizado: firebase.firestore.FieldValue.serverTimestamp() });
       setSave("Guardado ✓", "ok");
-    }catch(e){ setSave("No se pudo guardar. Revisa la conexión e intenta otra vez.", "err"); console.error(e); }
+    }catch(e){
+      const denied = /permission/i.test(e.code||e.message||"");
+      setSave(denied ? "Esta cuenta no tiene permiso para cambiar el inventario." : "No se pudo guardar. Revisa la conexión e intenta otra vez.", "err"); console.error(e);
+    }
   }, 350);
 }
 
@@ -289,6 +296,7 @@ document.addEventListener("click", e=>{
   if(t.closest("#resetNo")){ $("#resetConfirm").hidden=true; return; }
   if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"" }; $("#resetConfirm").hidden=true; persist(); return; }
   if(t.closest("#demoBtn")){ startApp(true); return; }
+  if(t.closest("#googleBtn")){ googleLogin(); return; }
   if(t.closest("#logoutBtn")){ if(demo){ location.reload(); return; } firebase.auth().signOut(); return; }
 });
 let avisoT;
@@ -310,6 +318,21 @@ $("#loginForm").addEventListener("submit", async e=>{
     err.hidden=false;
   }finally{ $("#loginBtn").textContent="Entrar"; }
 });
+
+async function googleLogin(){
+  const err = $("#loginErr"); err.hidden = true;
+  try{
+    const fb = await firebaseReady(true);
+    const prov = new fb.auth.GoogleAuthProvider(); prov.setCustomParameters({ prompt:"select_account" });
+    try{ await fb.auth().signInWithPopup(prov); }
+    catch(ex){ if(/popup-blocked|operation-not-supported/.test(ex.code||"")) await fb.auth().signInWithRedirect(prov); else throw ex; }
+  }catch(ex){
+    const c = ex && ex.code || "";
+    if(/popup-closed|cancelled-popup/.test(c)) return;
+    err.textContent = /unauthorized-domain/.test(c) ? "Falta autorizar este dominio en Firebase (Authentication → Configuración → Dominios autorizados)." : "No se pudo entrar con Google. Intenta otra vez.";
+    err.hidden = false;
+  }
+}
 
 /* =================== Arranque =================== */
 let unsub = null;
