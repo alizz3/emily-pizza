@@ -202,8 +202,9 @@ const refItem = ([cid,name]) => MENU.find(c=>c.id===cid).items.find(i=>i.name===
 // Lo que llega del panel: { ing:{clave:"agota"|"sin"}, prod:{id:true}, cat:{id:true}, aviso:"" }
 //   "agota" = todo lo que lleve ese ingrediente sale como agotado
 //   "sin"   = el producto se vende igual, pero sin ese ingrediente
-let STOCK = { ing:{}, prod:{}, cat:{}, aviso:"" };
+let STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"" };
 const ING_ALIAS = {
+  "carne":"carne desmechada",   // en la carta "carne" junto a "pollo desmechado" es la misma carne desmechada
   "una carne":"carne de hamburguesa", "dos carnes":"carne de hamburguesa", "1 carne de hamburguesa":"carne de hamburguesa",
   "2 carnes de hamburguesa":"carne de hamburguesa", "3 carnes de hamburguesa":"carne de hamburguesa",
   "huevos de codorniz":"huevo de codorniz", "tres huevos de codorniz":"huevo de codorniz", "dos huevos de codorniz":"huevo de codorniz",
@@ -213,7 +214,7 @@ const ING_ALIAS = {
   "queso rallado":"queso", "queso fundido":"queso", "bano de queso":"queso", "francesa de maduro":"maduro",
   "salsa guacamole":"guacamole", "pollo a la plancha":"pollo"
 };
-const ING_LABEL = { "carne de hamburguesa":"Carne de hamburguesa", "huevo de codorniz":"Huevo de codorniz", "papa chips":"Papa chips",
+const ING_LABEL = { "carne de hamburguesa":"Carne de hamburguesa", "carne desmechada":"Carne desmechada", "huevo de codorniz":"Huevo de codorniz", "papa chips":"Papa chips",
   "salsa":"Salsas", "champinon":"Champiñón", "pina":"Piña", "huevo frito":"Huevo frito", "maduro":"Maduro", "salchicha":"Salchicha",
   "queso":"Queso", "chocolate":"Chocolate", "guacamole":"Guacamole", "pollo":"Pollo" };
 const stockKey = label => { const k = norm(label); return ING_ALIAS[k] || k; };

@@ -169,7 +169,7 @@ main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
 
     <section class="card">
       <h2>Aviso del día</h2>
-      <p class="muted" style="margin:0 0 10px">Sale arriba en la página. Déjalo vacío para no mostrar nada.</p>
+      <p class="muted" style="margin:0 0 10px">Sale arriba en la página y se borra solo a medianoche. Déjalo vacío para no mostrar nada.</p>
       <textarea id="aviso" rows="2" maxlength="140" placeholder="Ej.: Hoy no hay carne desmechada, todo sale con pollo"></textarea>
     </section>
 
@@ -294,13 +294,13 @@ document.addEventListener("click", e=>{
   if(ps && !ps.disabled){ const k=ps.dataset.prod; if(STOCK.prod[k]) delete STOCK.prod[k]; else STOCK.prod[k]=true; persist(); return; }
   if(t.closest("#resetBtn")){ $("#resetConfirm").hidden=false; return; }
   if(t.closest("#resetNo")){ $("#resetConfirm").hidden=true; return; }
-  if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"" }; $("#resetConfirm").hidden=true; persist(); return; }
+  if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"", avisoFecha:"" }; $("#resetConfirm").hidden=true; persist(); return; }
   if(t.closest("#demoBtn")){ startApp(true); return; }
   if(t.closest("#googleBtn")){ googleLogin(); return; }
   if(t.closest("#logoutBtn")){ if(demo){ location.reload(); return; } firebase.auth().signOut(); return; }
 });
 let avisoT;
-$("#aviso").addEventListener("input", e=>{ clearTimeout(avisoT); avisoT=setTimeout(()=>{ STOCK.aviso = e.target.value.trim(); persist(); }, 600); });
+$("#aviso").addEventListener("input", e=>{ clearTimeout(avisoT); avisoT=setTimeout(()=>{ STOCK.aviso = e.target.value.trim(); STOCK.avisoFecha = STOCK.aviso ? hoyBogota() : ""; persist(); }, 600); });
 $("#ingQ").addEventListener("input", renderIng);
 
 $("#loginForm").addEventListener("submit", async e=>{

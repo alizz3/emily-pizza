@@ -13,7 +13,12 @@ async function firebaseReady(withAuth){
   return fb;
 }
 const stockRef = fb => fb.firestore().collection("tienda").doc("estado");
-const cleanStock = d => ({ ing:(d&&d.ing)||{}, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso:(d&&d.aviso)||"" });
+// Fecha de hoy en Bogotá (AAAA-MM-DD). El aviso del día solo se muestra el mismo día en que se escribió.
+const hoyBogota = () => new Intl.DateTimeFormat("en-CA",{ timeZone:"America/Bogota" }).format(new Date());
+const cleanStock = d => {
+  const vigente = !!(d && d.aviso && d.avisoFecha === hoyBogota());
+  return { ing:(d&&d.ing)||{}, prod:(d&&d.prod)||{}, cat:(d&&d.cat)||{}, aviso: vigente ? d.aviso : "", avisoFecha: vigente ? d.avisoFecha : "" };
+};
 async function watchStock(cb){
   try{
     const fb = await firebaseReady(false); if(!fb) return false;
