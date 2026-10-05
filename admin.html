@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#070606">
+<link rel="icon" href="img/icon-192.png">
+<title>Panel Emily Pizza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Albert+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Panel: lista de trabajo para el mostrador. Una columna, controles grandes para el dedo, estado claro de un vistazo. */
+:root{
+  --bg:#070606; --panel:#121110; --panel-2:#1a1917; --fg:#efe7da; --muted:#a59e93; --dim:#6e685f;
+  --line:rgba(239,231,218,.10); --line-2:rgba(239,231,218,.18);
+  --gold:#bfa173; --gold-soft:rgba(191,161,115,.12);
+  --ok:#86c493; --ok-soft:rgba(134,196,147,.14); --warn:#e0a35a; --warn-soft:rgba(224,163,90,.14); --bad:#e07a6a; --bad-soft:rgba(224,122,106,.14);
+  --btn:#efe7da; --btn-fg:#151311;
+  --display:"Bodoni Moda",Georgia,serif; --body:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){
+  --bg:#f5f0e7; --panel:#fffdf9; --panel-2:#f3ede2; --fg:#1d1a16; --muted:#6c645a; --dim:#9a9187;
+  --line:rgba(29,26,22,.10); --line-2:rgba(29,26,22,.18); --gold:#94733f; --gold-soft:rgba(148,115,63,.10);
+  --ok:#2f8a46; --ok-soft:rgba(47,138,70,.10); --warn:#b4661c; --warn-soft:rgba(180,102,28,.10); --bad:#b8402e; --bad-soft:rgba(184,64,46,.10);
+  --btn:#1d1a16; --btn-fg:#f5f0e7; color-scheme:light } }
+:root[data-theme="light"]{
+  --bg:#f5f0e7; --panel:#fffdf9; --panel-2:#f3ede2; --fg:#1d1a16; --muted:#6c645a; --dim:#9a9187;
+  --line:rgba(29,26,22,.10); --line-2:rgba(29,26,22,.18); --gold:#94733f; --gold-soft:rgba(148,115,63,.10);
+  --ok:#2f8a46; --ok-soft:rgba(47,138,70,.10); --warn:#b4661c; --warn-soft:rgba(180,102,28,.10); --bad:#b8402e; --bad-soft:rgba(184,64,46,.10);
+  --btn:#1d1a16; --btn-fg:#f5f0e7; color-scheme:light }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:12px 18px;font-weight:600;border:1px solid var(--line-2);background:transparent}
+.btn-main{background:var(--btn);color:var(--btn-fg);border-color:var(--btn)}
+.muted{color:var(--muted);font-size:.9rem}
+input[type=email],input[type=password],input[type=search],textarea{width:100%;background:var(--panel-2);border:1px solid var(--line-2);border-radius:12px;padding:12px 14px;font-size:1rem}
+input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+
+/* Login */
+.login{min-height:100vh;display:grid;place-items:center;padding-block:40px}
+.login form{width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.login img{width:170px;margin:0 auto}
+.login h1{margin:0;font-family:var(--display);font-weight:500;font-size:1.8rem}
+.err{color:var(--bad);font-size:.9rem;margin:0}
+.setup{text-align:left;border:1px solid var(--line-2);border-radius:14px;padding:14px 16px;background:var(--panel);font-size:.9rem}
+.setup ol{margin:8px 0 0;padding-left:18px;color:var(--muted)}
+
+/* Cabecera */
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.hd{display:flex;align-items:center;gap:12px;padding-block:12px}
+.hd img{width:56px}
+.hd .t{flex:1;min-width:0}
+.hd h1{margin:0;font-family:var(--display);font-weight:500;font-size:1.3rem;line-height:1.1}
+.save{font-size:.8rem;color:var(--muted)}
+.save.ok{color:var(--ok)} .save.err{color:var(--bad)}
+.tabs{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.tab{flex:none;border:1px solid transparent;background:transparent;color:var(--muted);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
+.tab[aria-selected="true"]{border-color:var(--line-2);color:var(--fg);background:var(--gold-soft)}
+.tab .n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;margin-left:6px;border-radius:99px;background:var(--bad-soft);color:var(--bad);font-size:.75rem}
+
+main{padding-block:16px 60px;display:flex;flex-direction:column;gap:16px}
+.card{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:16px}
+.card h2{margin:0 0 4px;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.summary{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;font-size:.88rem;font-weight:600;border:1px solid var(--line-2)}
+.pill.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.row-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.legend{display:grid;gap:6px;font-size:.88rem;color:var(--muted);margin:0 0 4px}
+.legend b{color:var(--fg)}
+
+/* Filas */
+.list{display:flex;flex-direction:column}
+.r{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.r:last-child{border-bottom:0}
+.r .info{flex:1;min-width:0}
+.r .name{font-weight:600}
+.r .sub{font-size:.8rem;color:var(--muted)}
+.r .sub button{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;font-size:.8rem}
+.r .who{font-size:.8rem;color:var(--muted);margin-top:4px}
+.r.st-agota .name{color:var(--bad)} .r.st-sin .name{color:var(--warn)}
+.r img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none}
+.seg3{flex:none;display:grid;grid-template-columns:repeat(3,auto);border:1px solid var(--line-2);border-radius:999px;overflow:hidden}
+.seg3 button{border:0;background:transparent;padding:8px 10px;font-size:.8rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.seg3 button[aria-pressed="true"].hay{background:var(--ok-soft);color:var(--ok)}
+.seg3 button[aria-pressed="true"].sin{background:var(--warn-soft);color:var(--warn)}
+.seg3 button[aria-pressed="true"].agota{background:var(--bad-soft);color:var(--bad)}
+.sw{flex:none;position:relative;width:52px;height:30px;border-radius:99px;border:1px solid var(--line-2);background:var(--ok-soft)}
+.sw::after{content:"";position:absolute;top:3px;left:25px;width:22px;height:22px;border-radius:50%;background:var(--ok);transition:left .2s}
+.sw[aria-checked="false"]{background:var(--bad-soft)}
+.sw[aria-checked="false"]::after{left:3px;background:var(--bad)}
+.sw:disabled{opacity:.45;cursor:not-allowed}
+.grp-t{margin:18px 0 2px;font-family:var(--display);font-size:1.15rem}
+.grp-t:first-child{margin-top:0}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bad-soft);font-size:.9rem}
+.demo{background:var(--warn-soft);color:var(--warn);text-align:center;font-size:.85rem;padding:8px 16px}
+@media (max-width:420px){ .seg3 button{padding:8px 8px;font-size:.76rem} .r{gap:10px} }
+</style>
+</head>
+<body>
+
+<section class="login wrap" id="loginView">
+  <form id="loginForm" novalidate>
+    <img id="loginLogo" src="img/logo.webp" alt="Emily Pizza">
+    <h1>Panel del local</h1>
+    <p class="muted" style="margin:0">Marca lo que se acabó y la página se actualiza al instante para todos.</p>
+    <div class="setup" id="setupMsg" hidden>
+      <b>Falta conectar Firebase.</b>
+      <ol>
+        <li>Crea el proyecto en Firebase y activa Firestore y el inicio de sesión con correo.</li>
+        <li>Pega la configuración en <code>firebase-config.js</code>.</li>
+        <li>Publica las reglas de <code>firestore.rules</code>.</li>
+      </ol>
+    </div>
+    <div id="loginFields">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input type="email" id="email" placeholder="Correo" autocomplete="username" required>
+        <input type="password" id="pass" placeholder="Contraseña" autocomplete="current-password" required>
+        <p class="err" id="loginErr" hidden></p>
+        <button class="btn btn-main" type="submit" id="loginBtn">Entrar</button>
+      </div>
+    </div>
+    <button class="btn" type="button" id="demoBtn">Ver demostración</button>
+  </form>
+</section>
+
+<div id="appView" hidden>
+  <div class="demo" id="demoBar" hidden>Modo demostración: los cambios no se guardan.</div>
+  <header>
+    <div class="wrap">
+      <div class="hd">
+        <img id="hdLogo" src="img/logo.webp" alt="">
+        <div class="t"><h1>Hoy en Emily Pizza</h1><div class="save" id="saveState">Al día</div></div>
+        <button class="btn" type="button" id="logoutBtn" style="padding:8px 14px">Salir</button>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="ing">Ingredientes<span class="n" id="nIng" hidden></span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="cat">Categorías<span class="n" id="nCat" hidden></span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="prod">Productos<span class="n" id="nProd" hidden></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Resumen</h2>
+      <div class="summary" id="summary"></div>
+      <div class="row-actions">
+        <button class="btn" type="button" id="resetBtn">Todo disponible</button>
+      </div>
+      <div class="confirm" id="resetConfirm" hidden>¿Marcar todo como disponible otra vez?
+        <button class="btn btn-main" type="button" id="resetYes" style="padding:8px 14px">Sí, todo hay</button>
+        <button class="btn" type="button" id="resetNo" style="padding:8px 14px">Cancelar</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Aviso del día</h2>
+      <p class="muted" style="margin:0 0 10px">Sale arriba en la página. Déjalo vacío para no mostrar nada.</p>
+      <textarea id="aviso" rows="2" maxlength="140" placeholder="Ej.: Hoy no hay carne desmechada, todo sale con pollo"></textarea>
+    </section>
+
+    <section class="card" data-panel="ing">
+      <div class="legend">
+        <span><b>Hay:</b> normal.</span>
+        <span><b>Sin él:</b> se puede pedir, pero llega sin ese ingrediente.</span>
+        <span><b>Se acabó:</b> todo lo que lo lleve sale agotado.</span>
+      </div>
+      <input type="search" id="ingQ" placeholder="Buscar ingrediente" aria-label="Buscar ingrediente" style="margin:10px 0 4px">
+      <div class="list" id="ingList"></div>
+    </section>
+
+    <section class="card" data-panel="cat" hidden>
+      <p class="muted" style="margin:0 0 6px">Apaga una categoría completa, por ejemplo cuando no hay arepas.</p>
+      <div class="list" id="catList"></div>
+    </section>
+
+    <section class="card" data-panel="prod" hidden>
+      <p class="muted" style="margin:0 0 6px">Apaga productos uno por uno. Los que ya están agotados por un ingrediente aparecen bloqueados.</p>
+      <div id="prodList"></div>
+    </section>
+  </main>
+</div>
+
+<script src="menu.js"></script>
+<script src="firebase-config.js"></script>
+<script src="stock.js"></script>
+<script>
+/* =================== Estado =================== */
+let demo = false, fbAuth = null, saveT = null;
+const imgSrcA = k => `img/${k}.webp`;
+const CATALOG = ingredientCatalog();
+const prodLabel = it => { const c=it.cat; return (c.single && !it.noPrefix && !it.name.startsWith(c.single)) ? `${c.single} ${it.name.toLowerCase()}` : (c.type==="pizza" ? "Pizza "+it.name : it.name); };
+
+/* Tema: el panel sigue el modo que se eligió en la página */
+try{ const t = JSON.parse(localStorage.getItem("emily-theme")); if(t) document.documentElement.dataset.theme = t; }catch(e){}
+function logoFor(){ const light = document.documentElement.dataset.theme==="light" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: light)").matches); return light ? "img/logo-dark.webp" : "img/logo.webp"; }
+$("#loginLogo").src = logoFor(); $("#hdLogo").src = logoFor();
+
+/* =================== Guardar =================== */
+function setSave(text, cls){ const el=$("#saveState"); el.textContent=text; el.className="save"+(cls?" "+cls:""); }
+function persist(){
+  render();
+  if(demo){ setSave("Demostración (sin guardar)"); return; }
+  setSave("Guardando…");
+  clearTimeout(saveT);
+  saveT = setTimeout(async()=>{
+    try{
+      const fb = await firebaseReady(true);
+      await stockRef(fb).set({ ...STOCK, actualizado: firebase.firestore.FieldValue.serverTimestamp() });
+      setSave("Guardado ✓", "ok");
+    }catch(e){ setSave("No se pudo guardar. Revisa la conexión e intenta otra vez.", "err"); console.error(e); }
+  }, 350);
+}
+
+/* =================== Pintar =================== */
+let tab = "ing";
+function render(){
+  const ingOut = Object.entries(STOCK.ing).filter(([,v])=>v==="agota").length;
+  const ingSin = Object.entries(STOCK.ing).filter(([,v])=>v==="sin").length;
+  const catOff = Object.values(STOCK.cat).filter(Boolean).length;
+  const allItems = MENU.flatMap(c=>c.items);
+  const prodOut = allItems.filter(it=>itemStatus(it).out).length;
+  $("#summary").innerHTML = (ingOut+ingSin+catOff+prodOut)===0
+    ? `<span class="pill ok">Todo disponible</span>`
+    : `${prodOut?`<span class="pill bad">${prodOut} de ${allItems.length} productos agotados</span>`:""}${ingOut?`<span class="pill bad">${ingOut} ingrediente${ingOut>1?"s":""} se acabó</span>`:""}${ingSin?`<span class="pill warn">${ingSin} se sirve${ingSin>1?"n":""} sin</span>`:""}${catOff?`<span class="pill bad">${catOff} categoría${catOff>1?"s":""} apagada${catOff>1?"s":""}</span>`:""}`;
+  const badge = (el,n) => { el.hidden = !n; el.textContent = n; };
+  badge($("#nIng"), ingOut+ingSin); badge($("#nCat"), catOff); badge($("#nProd"), Object.values(STOCK.prod).filter(Boolean).length);
+  if(document.activeElement !== $("#aviso")) $("#aviso").value = STOCK.aviso || "";
+  renderIng(); renderCat(); renderProd();
+}
+const openWho = new Set();
+function renderIng(){
+  const q = norm($("#ingQ").value.trim());
+  $("#ingList").innerHTML = CATALOG.filter(g=>!q || norm(g.label).includes(q)).map(g=>{
+    const st = STOCK.ing[g.key] || "hay";
+    const items = [...g.items].map(findItem);
+    const who = openWho.has(g.key) ? `<div class="who">${items.map(prodLabel).map(esc).join(" · ")}</div>` : "";
+    return `<div class="r st-${st}"><div class="info"><div class="name">${esc(g.label)}</div><div class="sub"><button type="button" data-who="${esc(g.key)}">En ${items.length} producto${items.length>1?"s":""}</button></div>${who}</div>
+      <div class="seg3" role="group" aria-label="${esc(g.label)}">
+        <button type="button" class="hay" data-ing="${esc(g.key)}" data-v="hay" aria-pressed="${st==="hay"}">Hay</button>
+        <button type="button" class="sin" data-ing="${esc(g.key)}" data-v="sin" aria-pressed="${st==="sin"}">Sin él</button>
+        <button type="button" class="agota" data-ing="${esc(g.key)}" data-v="agota" aria-pressed="${st==="agota"}">Se acabó</button>
+      </div></div>`;
+  }).join("") || `<p class="muted">No hay ingredientes con ese nombre.</p>`;
+}
+function renderCat(){
+  $("#catList").innerHTML = MENU.map(c=>`<div class="r"><img src="${imgSrcA(c.img)}" alt=""><div class="info"><div class="name">${esc(c.name)}</div><div class="sub">${c.items.length} producto${c.items.length>1?"s":""}</div></div>
+    <button type="button" class="sw" role="switch" data-cat="${c.id}" aria-checked="${!STOCK.cat[c.id]}" aria-label="${esc(c.name)} disponible"></button></div>`).join("");
+}
+function renderProd(){
+  $("#prodList").innerHTML = MENU.map(c=>`<h3 class="grp-t">${esc(c.name)}</h3><div class="list">${c.items.map(it=>{
+    const manual = !!STOCK.prod[it.id];
+    const st = itemStatus(it);
+    const auto = st.out && !manual;
+    return `<div class="r"><div class="info"><div class="name">${esc(c.type==="pizza"?"Pizza "+it.name:it.name)}</div><div class="sub">${auto?esc(st.reason):(manual?"Apagado a mano":"Disponible")}</div></div>
+      <button type="button" class="sw" role="switch" data-prod="${it.id}" aria-checked="${!st.out}" ${auto?"disabled":""} aria-label="${esc(it.name)} disponible"></button></div>`;
+  }).join("")}</div>`).join("");
+}
+
+/* =================== Eventos =================== */
+document.addEventListener("click", e=>{
+  const t = e.target;
+  const tb = t.closest("[data-tab]");
+  if(tb){ tab = tb.dataset.tab; document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected", b===tb)); document.querySelectorAll("[data-panel]").forEach(p=>p.hidden = p.dataset.panel!==tab); return; }
+  const ib = t.closest("[data-ing]");
+  if(ib){ const k=ib.dataset.ing, v=ib.dataset.v; if(v==="hay") delete STOCK.ing[k]; else STOCK.ing[k]=v; persist(); return; }
+  const w = t.closest("[data-who]");
+  if(w){ const k=w.dataset.who; openWho.has(k)?openWho.delete(k):openWho.add(k); renderIng(); return; }
+  const cs = t.closest("[data-cat]");
+  if(cs){ const k=cs.dataset.cat; if(STOCK.cat[k]) delete STOCK.cat[k]; else STOCK.cat[k]=true; persist(); return; }
+  const ps = t.closest("[data-prod]");
+  if(ps && !ps.disabled){ const k=ps.dataset.prod; if(STOCK.prod[k]) delete STOCK.prod[k]; else STOCK.prod[k]=true; persist(); return; }
+  if(t.closest("#resetBtn")){ $("#resetConfirm").hidden=false; return; }
+  if(t.closest("#resetNo")){ $("#resetConfirm").hidden=true; return; }
+  if(t.closest("#resetYes")){ STOCK = { ing:{}, prod:{}, cat:{}, aviso:"" }; $("#resetConfirm").hidden=true; persist(); return; }
+  if(t.closest("#demoBtn")){ startApp(true); return; }
+  if(t.closest("#logoutBtn")){ if(demo){ location.reload(); return; } firebase.auth().signOut(); return; }
+});
+let avisoT;
+$("#aviso").addEventListener("input", e=>{ clearTimeout(avisoT); avisoT=setTimeout(()=>{ STOCK.aviso = e.target.value.trim(); persist(); }, 600); });
+$("#ingQ").addEventListener("input", renderIng);
+
+$("#loginForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const err = $("#loginErr"); err.hidden = true;
+  const email = $("#email").value.trim(), pass = $("#pass").value;
+  if(!email || !pass){ err.textContent="Escribe el correo y la contraseña."; err.hidden=false; return; }
+  $("#loginBtn").textContent="Entrando…";
+  try{
+    const fb = await firebaseReady(true);
+    await fb.auth().signInWithEmailAndPassword(email, pass);
+  }catch(ex){
+    const c = ex && ex.code || "";
+    err.textContent = /invalid|wrong-password|user-not-found/.test(c) ? "Correo o contraseña incorrectos." : /too-many/.test(c) ? "Demasiados intentos. Espera un momento e intenta otra vez." : "No se pudo entrar. Revisa la conexión.";
+    err.hidden=false;
+  }finally{ $("#loginBtn").textContent="Entrar"; }
+});
+
+/* =================== Arranque =================== */
+let unsub = null;
+function startApp(isDemo){
+  demo = isDemo;
+  $("#loginView").hidden = true; $("#appView").hidden = false; $("#demoBar").hidden = !demo;
+  setSave(demo ? "Demostración (sin guardar)" : "Al día");
+  render();
+}
+(async function(){
+  if(!firebaseOn()){ $("#setupMsg").hidden=false; $("#loginFields").hidden=true; return; }
+  try{
+    const fb = await firebaseReady(true);
+    fb.auth().onAuthStateChanged(user=>{
+      if(unsub){ unsub(); unsub=null; }
+      if(!user){ $("#appView").hidden=true; $("#loginView").hidden=false; return; }
+      unsub = stockRef(fb).onSnapshot(snap=>{ STOCK = cleanStock(snap.data()); if($("#appView").hidden) startApp(false); else render(); }, e=>setSave("Sin permiso para ver el inventario. Revisa las reglas.", "err"));
+    });
+  }catch(e){ $("#loginErr").textContent="No se pudo cargar Firebase. Revisa la conexión."; $("#loginErr").hidden=false; }
+})();
+</script>
+</body>
+</html>

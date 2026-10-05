@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Inventario del día: todos lo pueden leer, solo el local lo puede cambiar.
+    match /tienda/estado {
+      allow read: if true;
+      // Cambia este correo por el de la cuenta que crees para el local en Firebase Authentication.
+      allow write: if request.auth != null
+                   && request.auth.token.email in ['CORREO-DEL-LOCAL@gmail.com'];
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
