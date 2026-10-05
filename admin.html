@@ -7,9 +7,13 @@
 <meta name="theme-color" content="#070606">
 <link rel="icon" href="img/icon-192.png">
 <title>Panel Emily Pizza</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Albert+Sans:wght@400;500;600;700&display=swap">
+<link rel="preload" href="fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/albert-sans.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Fraunces";src:url(fonts/fraunces.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Albert Sans";src:url(fonts/albert-sans.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+*{font-variation-settings:"SOFT" 50,"WONK" 0}
+</style>
 <style>
 /* Panel: lista de trabajo para el mostrador. Una columna, controles grandes para el dedo, estado claro de un vistazo. */
 :root{
@@ -18,7 +22,7 @@
   --gold:#bfa173; --gold-soft:rgba(191,161,115,.12);
   --ok:#86c493; --ok-soft:rgba(134,196,147,.14); --warn:#e0a35a; --warn-soft:rgba(224,163,90,.14); --bad:#e07a6a; --bad-soft:rgba(224,122,106,.14);
   --btn:#efe7da; --btn-fg:#151311;
-  --display:"Bodoni Moda",Georgia,serif; --body:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:"Fraunces",Georgia,"Times New Roman",serif; --body:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:dark;
 }
 @media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){

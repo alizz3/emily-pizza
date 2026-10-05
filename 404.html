@@ -9,12 +9,16 @@
 <title>Página no encontrada · Emily Pizza</title>
 <meta name="description" content="Esta página no existe. Vuelve al menú de Emily Pizza.">
 <meta name="robots" content="noindex">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Albert+Sans:wght@400;500;600;700&display=swap">
+<link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/albert-sans.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Fraunces";src:url(/fonts/fraunces.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Albert Sans";src:url(/fonts/albert-sans.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+*{font-variation-settings:"SOFT" 50,"WONK" 0}
+</style>
 <style>
 :root{--bg:#070606;--panel:#121110;--fg:#efe7da;--muted:#b3ab9f;--line:rgba(239,231,218,.14);--gold:#c9ab7c;--btn:#efe7da;--btn-fg:#151311;
-  --display:"Bodoni Moda",Georgia,serif;--body:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+  --display:"Fraunces",Georgia,"Times New Roman",serif;--body:"Albert Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f5f0e7;--panel:#fffdf9;--fg:#1d1a16;--muted:#5e574e;--line:rgba(29,26,22,.14);--gold:#7f6131;--btn:#1d1a16;--btn-fg:#f5f0e7;color-scheme:light}}
 :root[data-theme="light"]{--bg:#f5f0e7;--panel:#fffdf9;--fg:#1d1a16;--muted:#5e574e;--line:rgba(29,26,22,.14);--gold:#7f6131;--btn:#1d1a16;--btn-fg:#f5f0e7;color-scheme:light}
 *{box-sizing:border-box}

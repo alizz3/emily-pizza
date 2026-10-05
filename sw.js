@@ -1,8 +1,8 @@
 /* Emily Pizza · service worker: abre rápido y funciona aunque la señal esté mala.
    Sube el número de versión cuando cambies archivos para que los celulares se actualicen. */
-const VERSION = "emily-v2";
-const CORE = ["/", "/menu.js", "/stock.js", "/firebase-config.js", "/manifest.webmanifest",
-  "/img/logo.webp", "/img/logo-dark.webp", "/img/pizarra.webp", "/img/icon-192.png"];
+const VERSION = "emily-v3";
+const CORE = ["/", "/menu.js", "/app.js", "/stock.js", "/firebase-config.js", "/manifest.webmanifest",
+  "/fonts/fraunces.woff2", "/fonts/albert-sans.woff2", "/img/logo.webp", "/img/logo-dark.webp", "/img/pizarra.webp", "/img/icon-192.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

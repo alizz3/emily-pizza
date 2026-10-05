@@ -55,10 +55,10 @@ Cualquier sección se puede compartir con `#`: `/#combos`, `/#pizzas`, `/#hambur
 | HTTPS | ✅ Vercel + HSTS |
 | Privacidad y términos | ✅ Revisar con los dueños |
 | Cookies | ✅ Sin cookies de rastreo; el mapa de Google solo carga con permiso |
-| Accesibilidad | ✅ Lighthouse 97–100 |
+| Accesibilidad | ✅ Lighthouse 100 |
 | SEO | ✅ Título, descripción, sitemap, robots, datos de restaurante (JSON-LD) |
 | Favicon, Open Graph, 404 | ✅ |
-| Rendimiento | ✅ Imágenes WebP; Lighthouse móvil ~82 |
+| Rendimiento | ✅ Lighthouse escritorio 97, móvil 85 (carga real ~0,2 s); fuentes propias, scripts diferidos |
 | Enlaces rotos | ✅ Revisados |
 | Spam en formularios | ✅ No hay formularios con servidor; todo sale por WhatsApp |
 | Analítica | ⚠️ Activar en Vercel → proyecto → Analytics → Enable |
