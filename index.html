@@ -21,9 +21,40 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="es_CO">
 <meta name="twitter:card" content="summary_large_image">
-<title>Emily Pizza</title>
-<meta name="description" content="Menú digital de Emily Pizza. Arma tu pedido y envíalo por WhatsApp.">
+<title>Emily Pizza · Pizzas y comidas rápidas en Ciudad Bolívar</title>
+<meta name="description" content="Menú de Emily Pizza en Candelaria La Nueva, Bogotá: pizzas, hamburguesas, perros, salchipapas y combos. Arma tu pedido y envíalo por WhatsApp.">
+<link rel="canonical" href="https://emily-pizza.vercel.app/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Emily Pizza",
+  "image": "https://emily-pizza.vercel.app/img/og.jpg",
+  "logo": "https://emily-pizza.vercel.app/img/icon-512.png",
+  "url": "https://emily-pizza.vercel.app/",
+  "telephone": "+57 310 584 0621",
+  "servesCuisine": ["Pizza", "Hamburguesas", "Comida rápida", "Comida colombiana"],
+  "priceRange": "$$",
+  "acceptsReservations": false,
+  "hasMenu": "https://emily-pizza.vercel.app/#pizzas",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Carrera 32 # 63 Sur-44",
+    "addressLocality": "Bogotá",
+    "addressRegion": "Bogotá D.C.",
+    "addressCountry": "CO"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 4.5694733, "longitude": -74.1498631 },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "15:00", "closes": "23:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "12:00", "closes": "23:00" }
+  ]
+}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
 <link rel="preload" as="image" href="img/pizarra.webp">
+<link rel="preload" as="image" href="img/hero-pizza.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Albert+Sans:wght@400;500;600;700&display=swap">
@@ -37,7 +68,7 @@
   --panel-2:#1a1917;
   --fg:#efe7da;           /* texto crema */
   --muted:#a59e93;
-  --dim:#6e685f;
+  --dim:#8f887c;
   --line:rgba(239,231,218,.10);
   --line-2:rgba(239,231,218,.18);
   --gold:#bfa173;
@@ -56,21 +87,21 @@
 }
 @media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){
   --bg:#f5f0e7; --bg-2:#fbf8f2; --panel:#fffdf9; --panel-2:#f3ede2;
-  --fg:#1d1a16; --muted:#6c645a; --dim:#9a9187;
+  --fg:#1d1a16; --muted:#6c645a; --dim:#6f675c;
   --line:rgba(29,26,22,.10); --line-2:rgba(29,26,22,.18);
-  --gold:#94733f; --gold-soft:rgba(148,115,63,.10);
+  --gold:#7f6131; --gold-soft:rgba(148,115,63,.10);
   --btn:#1d1a16; --btn-fg:#f5f0e7; --nav:rgba(245,240,231,.92);
   --noise:.035; --corner:0; --shadow:0 10px 30px rgba(60,40,10,.18);
-  --ok:#2f8a46; --warn:#b4661c;
+  --ok:#26763a; --warn:#9a5512;
   color-scheme:light } }
 :root[data-theme="light"]{
   --bg:#f5f0e7; --bg-2:#fbf8f2; --panel:#fffdf9; --panel-2:#f3ede2;
-  --fg:#1d1a16; --muted:#6c645a; --dim:#9a9187;
+  --fg:#1d1a16; --muted:#6c645a; --dim:#6f675c;
   --line:rgba(29,26,22,.10); --line-2:rgba(29,26,22,.18);
-  --gold:#94733f; --gold-soft:rgba(148,115,63,.10);
+  --gold:#7f6131; --gold-soft:rgba(148,115,63,.10);
   --btn:#1d1a16; --btn-fg:#f5f0e7; --nav:rgba(245,240,231,.92);
   --noise:.035; --corner:0; --shadow:0 10px 30px rgba(60,40,10,.18);
-  --ok:#2f8a46; --warn:#b4661c;
+  --ok:#26763a; --warn:#9a5512;
   color-scheme:light }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -90,6 +121,9 @@ img{display:block}
 .logo-l{display:none}
 @media (prefers-color-scheme:light){ :root:not([data-theme="dark"]) .logo-d{display:none} :root:not([data-theme="dark"]) .logo-l{display:block} }
 :root[data-theme="light"] .logo-d{display:none} :root[data-theme="light"] .logo-l{display:block}
+
+.skip{position:absolute;left:12px;top:-60px;z-index:200;background:var(--btn);color:var(--btn-fg);padding:10px 16px;border-radius:999px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
 
 /* ---------- Splash ---------- */
 .splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),#070606 url(img/pizarra.webp) center/cover;transition:opacity .45s ease,visibility .45s}
@@ -145,17 +179,19 @@ img{display:block}
 
 /* Destacado (carrusel) */
 .feature{position:relative;margin-top:18px;border-radius:24px;overflow:hidden;height:230px;background:#141210;box-shadow:var(--shadow)}
-.slide{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr 1fr;opacity:0;transition:opacity .6s;pointer-events:none}
-.slide.on{opacity:1;pointer-events:auto}
+.slide{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr 1fr;opacity:0;visibility:hidden;transition:opacity .6s,visibility 0s .6s;pointer-events:none}
+.slide.on{opacity:1;visibility:visible;transition:opacity .6s;pointer-events:auto}
 .slide .tx{position:relative;z-index:2;padding:22px 0 22px 22px;display:flex;flex-direction:column;justify-content:center;gap:6px;color:var(--on-photo);min-width:0}
 .slide .tag{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#cdb187}
 .slide h2{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,6vw,2.1rem);line-height:1.05;text-wrap:balance}
 .slide .p{font-size:.86rem;opacity:.75}
 .slide .go{align-self:flex-start;margin-top:8px;border:0;border-radius:999px;padding:9px 16px;font-weight:600;font-size:.88rem;background:#efe7da;color:#151311}
 .slide img{position:absolute;right:0;top:0;height:100%;width:62%;object-fit:cover;-webkit-mask:linear-gradient(90deg,transparent 0,#000 35%);mask:linear-gradient(90deg,transparent 0,#000 35%)}
-.dots{position:absolute;left:22px;bottom:14px;z-index:3;display:flex;gap:6px}
-.dots button{width:7px;height:7px;padding:0;border-radius:99px;border:0;background:rgba(243,236,224,.35);transition:width .3s,background .3s}
-.dots button.on{width:20px;background:#efe7da}
+.dots{position:absolute;left:12px;bottom:6px;z-index:3;display:flex}
+.dots button{position:relative;width:24px;height:24px;padding:0;border:0;background:none}
+.dots button::before{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:99px;background:rgba(243,236,224,.4);transform:translate(-50%,-50%);transition:width .3s,background .3s}
+.dots button.on{width:34px}
+.dots button.on::before{width:20px;background:#efe7da}
 
 .h-sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:30px 0 12px}
 .h-sec h2{margin:0;font-family:var(--display);font-weight:500;font-size:1.55rem}
@@ -283,6 +319,9 @@ body.has-cart main{padding-bottom:84px} /* solo deja espacio cuando aparece la b
 .map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .map .fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;
   background:repeating-linear-gradient(0deg,transparent 0 38px,var(--line) 38px 39px),repeating-linear-gradient(90deg,transparent 0 38px,var(--line) 38px 39px)}
+.map-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.map-note{margin:0;font-size:.78rem;color:var(--muted)}
+.map-note a{color:inherit}
 .map .pin{width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--gold);display:grid;place-items:center}
 .map .pin::after{content:"";width:13px;height:13px;border-radius:50%;background:var(--panel)}
 .hours{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-variant-numeric:tabular-nums}
@@ -291,6 +330,8 @@ body.has-cart main{padding-bottom:84px} /* solo deja espacio cuando aparece la b
 .phone-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .mini{border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:4px 10px;font-size:.78rem}
 footer{position:relative;overflow:hidden;text-align:center;padding-block:48px 40px;color:var(--dim);font-size:.8rem}
+footer .legal{position:relative;z-index:1;display:flex;justify-content:center;gap:8px;margin-top:14px;font-size:.82rem}
+footer .legal a{color:var(--muted)}
 footer img{width:150px;height:auto;margin:0 auto 10px}
 footer .corner{position:absolute;bottom:0;width:min(34vw,200px);opacity:var(--corner)}
 footer .corner.l{left:0;-webkit-mask:radial-gradient(circle at 0 100%,#000 30%,transparent 70%);mask:radial-gradient(circle at 0 100%,#000 30%,transparent 70%)}
@@ -408,6 +449,7 @@ textarea{resize:vertical;min-height:70px}
 </head>
 <body>
 
+<a class="skip" href="#menu">Saltar al menú</a>
 <div id="chalk" aria-hidden="true"></div>
 <div class="splash" id="splash" aria-hidden="true">
   <img class="c l" src="img/c_bl.webp" alt="">
@@ -457,7 +499,7 @@ textarea{resize:vertical;min-height:70px}
 </nav>
 
 <main>
-  <div class="wrap" id="menu"></div>
+  <div class="wrap" id="menu" tabindex="-1"></div>
   <div class="wrap"><p class="empty" id="empty">No encontramos nada con esa búsqueda.</p></div>
 
   <section class="section wrap" id="eventos">
@@ -519,7 +561,11 @@ textarea{resize:vertical;min-height:70px}
         <div class="fallback">
           <div class="pin" aria-hidden="true"></div>
           <a class="addr" data-maps target="_blank" rel="noopener" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Carrera 32 # 63 Sur-44, Candelaria La Nueva</span></a>
-          <a class="btn btn-ghost" id="mapLink" target="_blank" rel="noopener" href="#">Abrir en Google Maps ↗</a>
+          <div class="map-actions">
+            <button class="btn btn-main" type="button" id="loadMap">Ver mapa aquí</button>
+            <a class="btn btn-ghost" id="mapLink" target="_blank" rel="noopener" href="#">Abrir en Google Maps ↗</a>
+          </div>
+          <p class="map-note">Al ver el mapa, Google puede usar cookies. <a href="/privacidad#cookies">Cómo usamos las cookies</a></p>
         </div>
       </div>
       <div class="card"><h3>Dirección</h3><a class="addr" data-maps target="_blank" rel="noopener" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Carrera 32 # 63 Sur-44</span></a><p class="muted" style="margin-top:2px">Barrio Candelaria La Nueva, Ciudad Bolívar, Bogotá</p><p style="margin-top:10px"><a class="addr" data-maps target="_blank" rel="noopener" href="#"><span>Cómo llegar en Google Maps ↗</span></a></p></div>
@@ -538,6 +584,7 @@ textarea{resize:vertical;min-height:70px}
     <img class="logo-d" src="img/logo.webp" alt="Emily Pizza" width="530" height="424">
     <img class="logo-l" src="img/logo-dark.webp" alt="Emily Pizza" width="530" height="424">
     <p>Cocinamos con amor · Preparado al momento · Sabor que te enamora</p>
+    <nav class="legal" aria-label="Información legal"><a href="/privacidad">Privacidad</a><span aria-hidden="true">·</span><a href="/terminos">Términos y condiciones</a></nav>
     <p style="margin-top:8px"><a class="addr" data-maps target="_blank" rel="noopener" href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Carrera 32 # 63 Sur-44, Ciudad Bolívar</span></a></p>
   </footer>
 </main>
@@ -550,9 +597,9 @@ textarea{resize:vertical;min-height:70px}
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Menú
 </button>
 <div class="scrim" id="scrim"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" inert>
   <div class="sheet-head">
-    <div><div class="k" id="sheetKicker"></div><h2 id="sheetTitle"></h2></div>
+    <div><div class="k" id="sheetKicker"></div><h2 id="sheetTitle">Detalle</h2></div>
     <button class="x" type="button" id="closeSheet" aria-label="Cerrar">✕</button>
   </div>
   <div class="sheet-body" id="sheetBody"></div>
@@ -668,7 +715,7 @@ function openHours(){
 /* =================== INICIO =================== */
 let slideI = 0, slideT;
 function renderHome(){
-  $("#feature").innerHTML = CONFIG.destacados.map(([cid,t,p,img],i)=>`<div class="slide${i===0?" on":""}" aria-hidden="${i!==0}"><img src="${imgSrc(img)}" alt=""><div class="tx"><span class="tag">Emily Pizza</span><h2>${esc(t)}</h2><span class="p">${esc(p)}</span><button class="go" type="button" data-go="${cid}">Ver ${esc(MENU.find(c=>c.id===cid).short.toLowerCase())}</button></div></div>`).join("")
+  $("#feature").innerHTML = CONFIG.destacados.map(([cid,t,p,img],i)=>`<div class="slide${i===0?" on":""}"${i!==0?" inert":""}><img src="${imgSrc(img)}" alt="${esc("Foto de "+t.toLowerCase())}"${i===0?' fetchpriority="high"':' loading="lazy"'}><div class="tx"><span class="tag">Emily Pizza</span><h2>${esc(t)}</h2><span class="p">${esc(p)}</span><button class="go" type="button" data-go="${cid}">Ver ${esc(MENU.find(c=>c.id===cid).short.toLowerCase())}</button></div></div>`).join("")
     + `<div class="dots">${CONFIG.destacados.map((_,i)=>`<button type="button" aria-label="Destacado ${i+1}" data-slide="${i}" class="${i===0?"on":""}"></button>`).join("")}</div>`;
   renderCatsFavs();
   startSlides();
@@ -689,7 +736,7 @@ function renderCatsFavs(){
 function showSlide(i){
   const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
   slideI = (i + s.length) % s.length;
-  s.forEach((el,k)=>{ el.classList.toggle("on",k===slideI); el.setAttribute("aria-hidden", k!==slideI); });
+  s.forEach((el,k)=>{ el.classList.toggle("on",k===slideI); el.inert = k!==slideI; });
   d.forEach((el,k)=>el.classList.toggle("on",k===slideI));
 }
 function startSlides(){
@@ -700,7 +747,8 @@ function startSlides(){
 
 /* =================== CARTA =================== */
 const pizzaIcon = r => `<svg width="38" height="38" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="19" cy="19" r="${r+2}"/><circle cx="19" cy="19" r="${r}" stroke-dasharray="2 2.5" opacity=".6"/><path d="M19 ${19-r}v${2*r}M${19-r} 19h${2*r}" opacity=".5"/></svg>`;
-const banner = c => `<div class="banner"><img src="${imgSrc(c.img)}" alt="" loading="lazy"><div class="t"><h2>${esc(c.name)}</h2>${c.lead?`<p>${esc(c.lead)}</p>`:""}${c.badge?`<span class="badge">${esc(c.badge)}</span>`:""}</div></div>`;
+const photoAlt = c => `Foto de ${c.name.toLowerCase()} de Emily Pizza`;
+const banner = c => `<div class="banner"><img src="${imgSrc(c.img)}" alt="${esc(photoAlt(c))}" loading="lazy"><div class="t"><h2>${esc(c.name)}</h2>${c.lead?`<p>${esc(c.lead)}</p>`:""}${c.badge?`<span class="badge">${esc(c.badge)}</span>`:""}</div></div>`;
 function itemRow(it){
   const c = it.cat, st = itemStatus(it);
   const priceHtml = c.type==="pizza" ? `<span class="price"><small>desde</small>${fmt(PIZZA_SIZES[0].price)}</span>` : `<span class="price">${fmt(it.price)}</span>`;
@@ -716,7 +764,7 @@ function renderMenu(){
         <div class="step extra">2 · Sabores <em>en mediana y familiar puedes pedir mitad y mitad</em></div>`;
     }
     if(c.type==="combo"){
-      html += `<div class="combo-grid">${c.items.map(it=>{ const st=itemStatus(it); return `<button class="combo${st.out?" out":""}" type="button" data-id="${it.id}"${st.out?` data-out="${esc(st.reason)}"`:""} data-search="${esc(norm("combo "+it.name+" "+it.parts.join(" ")))}"><img src="${imgSrc(it.img)}" alt="" loading="lazy"><span class="in"><span class="num">${esc(it.name)}</span><ul>${it.parts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul><span class="foot"><span class="price">${fmt(it.price)}</span>${st.out?'<span class="sold">Agotado hoy</span>':'<span class="add" aria-hidden="true">+</span>'}</span></span></button>`;}).join("")}</div>
+      html += `<div class="combo-grid">${c.items.map(it=>{ const st=itemStatus(it); return `<button class="combo${st.out?" out":""}" type="button" data-id="${it.id}"${st.out?` data-out="${esc(st.reason)}"`:""} data-search="${esc(norm("combo "+it.name+" "+it.parts.join(" ")))}"><img src="${imgSrc(it.img)}" alt="${esc("Foto del "+it.name.toLowerCase()+": "+it.parts.join(", "))}" loading="lazy"><span class="in"><span class="num">${esc(it.name)}</span><ul>${it.parts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul><span class="foot"><span class="price">${fmt(it.price)}</span>${st.out?'<span class="sold">Agotado hoy</span>':'<span class="add" aria-hidden="true">+</span>'}</span></span></button>`;}).join("")}</div>
         <div class="arma extra"><img src="img/arma.webp" alt="" loading="lazy"><div class="in"><b>${CONFIG.combo.label}</b><p>${CONFIG.combo.desc}. Agrégalo a tu hamburguesa, perro, salchipapa y más.</p><span class="price">${fmt(CONFIG.combo.price)}</span></div></div>`;
     } else html += `<div class="list">${c.items.map(itemRow).join("")}</div>`;
     if(c.type==="drink") html += `<div class="flavors extra">${c.flavors.map(f=>`<span>${f}</span>`).join("")}</div>`;
@@ -791,8 +839,8 @@ function updateBar(bump){
 
 /* =================== HOJA =================== */
 let sheetMode=null, lastFocus=null, draft=null;
-function openSheet(){ lastFocus=document.activeElement; $("#scrim").classList.add("show"); $("#sheet").classList.add("show"); document.body.style.overflow="hidden"; $("#sheetBody").scrollTop=0; setTimeout(()=>$("#closeSheet").focus(),60); }
-function closeSheet(){ $("#scrim").classList.remove("show"); $("#sheet").classList.remove("show"); document.body.style.overflow=""; sheetMode=null; if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true}); }
+function openSheet(){ $("#sheet").inert=false; lastFocus=document.activeElement; $("#scrim").classList.add("show"); $("#sheet").classList.add("show"); document.body.style.overflow="hidden"; $("#sheetBody").scrollTop=0; setTimeout(()=>$("#closeSheet").focus(),60); }
+function closeSheet(){ $("#sheet").inert=true; $("#scrim").classList.remove("show"); $("#sheet").classList.remove("show"); document.body.style.overflow=""; sheetMode=null; if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true}); }
 // locked = ingredientes que hoy no hay: salen quitados y no se pueden volver a poner
 const chips = (list, removed, key, locked=new Set()) => { locked.forEach(i=>removed.add(i)); return `<div class="ings">${list.map((g,i)=>locked.has(i)
   ? `<button type="button" class="ing locked" disabled aria-pressed="true">${esc(g)} · hoy no hay</button>`
@@ -957,6 +1005,7 @@ document.addEventListener("click", e=>{
   }
   if(t.closest("#themeBtn")){ toggleTheme(); return; }
   if(t.closest("#installBtn")){ doInstall(); return; }
+  if(t.closest("#loadMap")){ loadMap(); return; }
   if(t.closest("#openCart")){ openCart(); return; }
   if(t.closest("#closeSheet") || t.id==="scrim" || t.closest("[data-close]")){ closeSheet(); return; }
   if(t.closest("#copyPhone")){ copyText("3105840621","Número copiado"); return; }
@@ -1008,9 +1057,12 @@ document.addEventListener("keydown", e=>{ if(e.key==="Escape" && sheetMode) clos
 function renderMap(){
   $("#mapLink").href=CONFIG.mapLink;
   document.querySelectorAll("[data-maps]").forEach(a=>a.href=CONFIG.mapLink);
-  let framed=true; try{ framed = window.self!==window.top; }catch(e){}
-  if(!framed){ // en el sitio publicado (Vercel) se ve el mapa; en vistas previas en marco queda la tarjeta
-    const f=document.createElement("iframe"); f.src=CONFIG.mapEmbed; f.loading="lazy"; f.title="Ubicación de Emily Pizza"; f.allowFullscreen=true; f.referrerPolicy="strict-origin-when-cross-origin"; $("#map").appendChild(f);
+  if(store.get("emily-map-ok", false)) loadMap();
+}
+function loadMap(){ // el mapa de Google (con sus cookies) solo se carga cuando la persona lo pide
+  if($("#map iframe")) return;
+  store.set("emily-map-ok", true);
+  { const f=document.createElement("iframe"); f.src=CONFIG.mapEmbed; f.loading="lazy"; f.title="Ubicación de Emily Pizza"; f.allowFullscreen=true; f.referrerPolicy="strict-origin-when-cross-origin"; $("#map").appendChild(f);
   }
 }
 function renderQRs(){
@@ -1021,13 +1073,13 @@ function renderQRs(){
 function hideSplash(){ const s=$("#splash"); if(!s || s.classList.contains("out")) return; s.classList.add("out"); setTimeout(()=>s.remove(),600); jumpToHash(); }
 (function(){
   const t0 = performance.now();
-  const done = () => setTimeout(hideSplash, Math.max(0, 1100 - (performance.now()-t0)));
-  if(document.readyState==="complete") done(); else addEventListener("load", done, { once:true });
+  const done = () => setTimeout(hideSplash, Math.max(0, 1000 - (performance.now()-t0)));
+  done(); // el logo se ve ~1 segundo; no esperamos a que bajen todas las fotos
   setTimeout(hideSplash, 2500); // por si alguna imagen tarda
 })();
 
 if(firebaseOn()) STOCK = cleanStock(store.get("emily-stock", null));
-paintChalk(); syncThemeBtn(); renderHome(); renderMenu(); renderStatus(); renderQRs(); renderMap(); updateBar(); refreshEvent();
+(window.requestIdleCallback || (f=>setTimeout(f,200)))(paintChalk); syncThemeBtn(); renderHome(); renderMenu(); renderStatus(); renderQRs(); renderMap(); updateBar(); refreshEvent();
 setActive(MENU[0].id);
 setInterval(renderStatus, 60000);
 let spyT; addEventListener("scroll", ()=>{ cancelAnimationFrame(spyT); spyT=requestAnimationFrame(spy); }, { passive:true });

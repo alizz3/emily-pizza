@@ -30,13 +30,13 @@ const PIZZA_SIZES = [
   { id:"familiar", name:"Familiar", info:"2 sabores · 50 cm", price:65000, flavors:2, r:15 }
 ];
 const PIZZA_FLAVORS = [
-  ["Tres carnes","Jamón, cábano, pollo y queso"],
+  ["Tres carnes","Jamón, cábano, pollo desmechado y queso"],
   ["Criolla","Carne desmechada, jamón, maíz y queso"],
   ["Mexicana","Carne desmechada, jamón, ají casero y queso"],
-  ["Pollo con champiñones","Pollo, champiñones y queso"],
+  ["Pollo con champiñones","Pollo desmechado, champiñones y queso"],
   ["Napolitana","Tomate, champiñones, orégano y queso"],
-  ["Pollo con tocineta","Pollo, tocineta y queso"],
-  ["Campesina","Pollo, maíz, jamón y queso"],
+  ["Pollo con tocineta","Pollo desmechado, tocineta y queso"],
+  ["Campesina","Pollo desmechado, maíz, jamón y queso"],
   ["Hawaiana","Piña, jamón y queso"],
   ["Chocoreo","Chocolate derretido, galleta Oreo y queso"],
   ["Choco banano","Chocolate, banano y queso"]
@@ -64,23 +64,23 @@ const MENU = [
       { name:"Colombo ranchera", desc:"Una carne, vegetales, salsa, tocineta, salchicha, huevo frito, queso y papas chips", price:20000 },
       { name:"Tripleta", desc:"3 carnes de hamburguesa", price:20000 },
       { name:"Dejavú", desc:"2 carnes de hamburguesa, huevo frito, tocineta, salsa y guacamole", price:22000 },
-      { name:"Extrema", desc:"Una carne, vegetales, salchicha, salsas, carne, pollo desmechado, queso, huevo frito, tocineta y papas chips", price:23000 },
-      { name:"Extrema criolla", desc:"Una carne, vegetales, salsa, queso, salchicha, tocineta, maíz, carne, pollo desmechado, huevo frito y papas chips", price:24000 },
+      { name:"Extrema", desc:"Una carne, vegetales, salchicha, salsas, carne desmechada, pollo desmechado, queso, huevo frito, tocineta y papas chips", price:23000 },
+      { name:"Extrema criolla", desc:"Una carne, vegetales, salsa, queso, salchicha, tocineta, maíz, carne desmechada, pollo desmechado, huevo frito y papas chips", price:24000 },
       { name:"Parrillera", desc:"1 carne de hamburguesa, cerdo, pollo a la plancha, huevo frito, tocineta y tajadas", price:28000 }
     ]},
   { id:"perros", name:"Perros", short:"Perros", single:"Perro", img:"perros", lead:"Artesanales, preparados al momento.", badge:"Salchicha americana Zenú",
     items:[
       { name:"Sencillo", desc:"Salchicha, salsas, queso, papas chips y tres huevos de codorniz", price:11000 },
       { name:"Hawaiano", desc:"Salchicha, salsas, piña, jamón, queso, papas chips y tres huevos de codorniz", price:15000 },
-      { name:"Especial", desc:"Salchicha, carne, pollo desmechado, salsas, queso, papas chips y tres huevos de codorniz", price:18000 },
-      { name:"Criollo", desc:"Salchicha, carne, pollo desmechado, maíz, salsas, queso, papas chips y tres huevos de codorniz", price:20000 },
-      { name:"Súper especial", desc:"Salchicha, carne, pollo desmechado, salsas, queso, papas chips, tres huevos de codorniz y tocineta", price:22000 }
+      { name:"Especial", desc:"Salchicha, carne desmechada, pollo desmechado, salsas, queso, papas chips y tres huevos de codorniz", price:18000 },
+      { name:"Criollo", desc:"Salchicha, carne desmechada, pollo desmechado, maíz, salsas, queso, papas chips y tres huevos de codorniz", price:20000 },
+      { name:"Súper especial", desc:"Salchicha, carne desmechada, pollo desmechado, salsas, queso, papas chips, tres huevos de codorniz y tocineta", price:22000 }
     ]},
   { id:"salchipapas", name:"Salchipapas", short:"Salchipapas", single:"Salchipapa", img:"salchipapas", lead:"Papas naturales, preparadas al momento.", badge:"Papa 100% natural",
     items:[
       { name:"Sencilla", desc:"1 salchicha, huevo de codorniz y salsas", price:11000 },
       { name:"Especial", desc:"Doble salchicha, huevo de codorniz y salsas", price:15000 },
-      { name:"Súper", desc:"1 salchicha, carne, pollo desmechado, huevo de codorniz y salsas", price:18000 },
+      { name:"Súper", desc:"1 salchicha, carne desmechada, pollo desmechado, huevo de codorniz y salsas", price:18000 },
       { name:"Salchi Emily", noPrefix:true, desc:"1 salchicha, tocineta, papa chips, queso rallado y salsas", price:18000 },
       { name:"Salchi Madurita", noPrefix:true, desc:"Pollo desmechado, carne desmechada, tocineta, doble salchicha, queso fundido, francesa de maduro y salsas", price:40000 },
       { name:"Porción de papa", price:7000, noCombo:true, noPrefix:true },
@@ -88,50 +88,50 @@ const MENU = [
     ]},
   { id:"arepas", name:"Arepas rellenas", short:"Arepas", single:"Arepa", img:"arepas",
     items:[
-      { name:"Mixta", desc:"Carne, pollo desmechado, queso, papa chips y huevo de codorniz", price:13000 },
+      { name:"Mixta", desc:"Carne desmechada, pollo desmechado, queso, papa chips y huevo de codorniz", price:13000 },
       { name:"Solo pollo", desc:"Pollo desmechado, queso, papa chips y huevo de codorniz", price:13000 },
-      { name:"Solo carne", desc:"Carne, queso, papa chips y huevo de codorniz", price:14000 },
+      { name:"Solo carne", desc:"Carne desmechada, queso, papa chips y huevo de codorniz", price:14000 },
       { name:"Hawaiana", desc:"Carne desmechada, jamón, piña, queso, papa chips y huevo de codorniz", price:13000 },
-      { name:"Criolla", desc:"Carne, pollo desmechado, maíz, papa chips y huevo de codorniz", price:15000 },
-      { name:"Ranchera", desc:"Carne, pollo desmechado, papa chips, huevo de codorniz y salchicha", price:17000 },
+      { name:"Criolla", desc:"Carne desmechada, pollo desmechado, maíz, papa chips y huevo de codorniz", price:15000 },
+      { name:"Ranchera", desc:"Carne desmechada, pollo desmechado, papa chips, huevo de codorniz y salchicha", price:17000 },
       { name:"Criolla solo pollo", desc:"Pollo desmechado, maíz, papa chips y huevo de codorniz", price:15000 },
-      { name:"Criolla solo carne", desc:"Carne, maíz, papa chips y huevo de codorniz", price:17000 },
+      { name:"Criolla solo carne", desc:"Carne desmechada, maíz, papa chips y huevo de codorniz", price:17000 },
       { name:"Ranchera solo pollo", desc:"Pollo desmechado, papa chips, huevo de codorniz y salchicha", price:17000 },
-      { name:"Ranchera solo carne", desc:"Carne, papa chips, huevo de codorniz y salchicha", price:19000 }
+      { name:"Ranchera solo carne", desc:"Carne desmechada, papa chips, huevo de codorniz y salchicha", price:19000 }
     ]},
   { id:"patacones", name:"Patacones", short:"Patacones", single:"Patacón", img:"patacones",
     items:[
-      { name:"Mixto", desc:"Carne, pollo desmechado, queso y huevo de codorniz", price:21000 },
+      { name:"Mixto", desc:"Carne desmechada, pollo desmechado, queso y huevo de codorniz", price:21000 },
       { name:"Solo pollo", desc:"Pollo desmechado, queso y huevo de codorniz", price:21000 },
-      { name:"Solo carne", desc:"Carne, queso y huevo de codorniz", price:22000 },
-      { name:"Criollo", desc:"Carne, pollo desmechado, maíz, queso y huevo de codorniz", price:21000 },
-      { name:"Ranchero", desc:"Carne, pollo desmechado, queso, huevos de codorniz y salchicha", price:23000 },
+      { name:"Solo carne", desc:"Carne desmechada, queso y huevo de codorniz", price:22000 },
+      { name:"Criollo", desc:"Carne desmechada, pollo desmechado, maíz, queso y huevo de codorniz", price:21000 },
+      { name:"Ranchero", desc:"Carne desmechada, pollo desmechado, queso, huevos de codorniz y salchicha", price:23000 },
       { name:"Ranchero solo pollo", desc:"Pollo desmechado, queso, huevos de codorniz y salchicha", price:23000 },
-      { name:"Ranchero solo carne", desc:"Carne, queso, huevos de codorniz y salchicha", price:25000 },
+      { name:"Ranchero solo carne", desc:"Carne desmechada, queso, huevos de codorniz y salchicha", price:25000 },
       { name:"Criollo solo pollo", desc:"Pollo desmechado, maíz, queso y huevo de codorniz", price:21000 },
-      { name:"Criollo solo carne", desc:"Carne, maíz, queso y huevo de codorniz", price:23000 }
+      { name:"Criollo solo carne", desc:"Carne desmechada, maíz, queso y huevo de codorniz", price:23000 }
     ]},
   { id:"mazorcadas", name:"Mazorcadas", short:"Mazorcadas", single:"Mazorcada", img:"mazorcadas",
     items:[
-      { name:"Sencilla", desc:"Carne, pollo desmechado, maíz, salsas, queso, papas chips y dos huevos de codorniz", price:21000 },
+      { name:"Sencilla", desc:"Carne desmechada, pollo desmechado, maíz, salsas, queso, papas chips y dos huevos de codorniz", price:21000 },
       { name:"Solo pollo", desc:"Pollo desmechado, maíz, salsas, queso, papas chips y dos huevos de codorniz", price:21000 },
       { name:"Solo carne", desc:"Carne desmechada, maíz, salsas, queso, papas chips y dos huevos de codorniz", price:23000 },
-      { name:"Ranchera", desc:"Carne, pollo desmechado, salchicha, maíz, salsas, queso, papa chips y huevos de codorniz", price:23000 },
+      { name:"Ranchera", desc:"Carne desmechada, pollo desmechado, salchicha, maíz, salsas, queso, papa chips y huevos de codorniz", price:23000 },
       { name:"Ranchera solo pollo", desc:"Pollo desmechado, salchicha, maíz, salsas, queso, papa chips y huevos de codorniz", price:23000 },
-      { name:"Ranchera solo carne", desc:"Carne, salchicha, maíz, salsas, queso, papa chips y huevos de codorniz", price:25000 },
-      { name:"Madurita", desc:"Carne, pollo desmechado, tocineta, maduro, maíz, salsa, queso, papas chips y huevos de codorniz", price:26000 },
+      { name:"Ranchera solo carne", desc:"Carne desmechada, salchicha, maíz, salsas, queso, papa chips y huevos de codorniz", price:25000 },
+      { name:"Madurita", desc:"Carne desmechada, pollo desmechado, tocineta, maduro, maíz, salsa, queso, papas chips y huevos de codorniz", price:26000 },
       { name:"Madurita solo pollo", desc:"Pollo desmechado, tocineta, maduro, maíz, salsa, queso, papas chips y huevos de codorniz", price:26000 },
-      { name:"Madurita solo carne", desc:"Carne, tocineta, maduro, maíz, salsa, queso, papas chips y huevos de codorniz", price:28000 },
-      { name:"Emily", desc:"Papa a la francesa, carne, pollo desmechado, tocineta, salchicha, maduro, maíz, salsas, queso, papas chips y huevo de codorniz", price:36000 }
+      { name:"Madurita solo carne", desc:"Carne desmechada, tocineta, maduro, maíz, salsa, queso, papas chips y huevos de codorniz", price:28000 },
+      { name:"Emily", desc:"Papa a la francesa, carne desmechada, pollo desmechado, tocineta, salchicha, maduro, maíz, salsas, queso, papas chips y huevo de codorniz", price:36000 }
     ]},
   { id:"burritos", name:"Burritos", short:"Burritos", single:"Burrito", img:"burritos", lead:"Con el sabor tradicional.",
     items:[
-      { name:"Sabanero", desc:"Cerdo, pollo, queso, maíz y papa a la francesa", price:22000 },
-      { name:"Burrito Solitario", desc:"Cerdo, pollo, queso y papa a la francesa", price:22000 },
-      { name:"Burrito Montañero", desc:"Cerdo, pollo, queso, tocineta y papa a la francesa", price:22000 },
-      { name:"Burrito al Potrero", desc:"Cerdo, pollo, queso, piña en trozos, tocineta y papa a la francesa", price:22000 },
-      { name:"Burrito Condorito", desc:"Cerdo, pollo, queso, Doritos, ají casero y papa a la francesa", price:23000 },
-      { name:"Burrito Mexicano", desc:"Cerdo, pollo, queso, salchicha, tocineta, ají casero y papa a la francesa", price:25000 }
+      { name:"Sabanero", desc:"Cerdo, pollo desmechado, queso, maíz y papa a la francesa", price:22000 },
+      { name:"Burrito Solitario", desc:"Cerdo, pollo desmechado, queso y papa a la francesa", price:22000 },
+      { name:"Burrito Montañero", desc:"Cerdo, pollo desmechado, queso, tocineta y papa a la francesa", price:22000 },
+      { name:"Burrito al Potrero", desc:"Cerdo, pollo desmechado, queso, piña en trozos, tocineta y papa a la francesa", price:22000 },
+      { name:"Burrito Condorito", desc:"Cerdo, pollo desmechado, queso, Doritos, ají casero y papa a la francesa", price:23000 },
+      { name:"Burrito Mexicano", desc:"Cerdo, pollo desmechado, queso, salchicha, tocineta, ají casero y papa a la francesa", price:25000 }
     ]},
   { id:"quesadillas", name:"Quesadillas", short:"Quesadillas", single:"Quesadilla", img:"quesadillas",
     items:[
@@ -139,11 +139,11 @@ const MENU = [
       { name:"Tentación", desc:"Chocolate, banano y queso", price:20000 },
       { name:"Pollo", desc:"Pollo desmechado y queso", price:20000 },
       { name:"Carne", desc:"Carne desmechada y queso", price:20000 },
-      { name:"Mixta", desc:"Carne, pollo desmechado y queso", price:21000 },
-      { name:"Ranchera", desc:"Carne, pollo desmechado, salchicha y queso", price:23000 }
+      { name:"Mixta", desc:"Carne desmechada, pollo desmechado y queso", price:21000 },
+      { name:"Ranchera", desc:"Carne desmechada, pollo desmechado, salchicha y queso", price:23000 }
     ]},
   { id:"lasana", name:"Lasaña", short:"Lasaña", img:"lasana", lead:"Artesanal, acompañada con 2 tajadas de pan.", sides:["2 tajadas de pan"], noCombo:true,
-    items:[ { name:"Lasaña mixta", desc:"Pollo, carne y champiñón", price:20000 } ]},
+    items:[ { name:"Lasaña mixta", desc:"Pollo desmechado, carne desmechada y champiñón", price:20000 } ]},
   { id:"carta", name:"Platos a la carta", short:"Platos", img:"carta", lead:"Acompañados con papa a la francesa, ensalada y patacón.", sides:["Papa a la francesa","Ensalada","Patacón"], noCombo:true,
     items:[
       { name:"Churrasco", price:30000 },
@@ -174,8 +174,8 @@ const MENU = [
         choice:{ label:"Hamburguesas", options:[ {label:"Doble carne", ref:["hamburguesas","Doble carne"], n:3, unit:"Hamburguesa"}, {label:"Ranchera", ref:["hamburguesas","Ranchera"], n:3, unit:"Hamburguesa"}, {label:"Colombiana", ref:["hamburguesas","Colombiana"], n:3, unit:"Hamburguesa"} ] } },
       { name:"Combo 5", img:"combo5", price:72000, parts:["3 hamburguesas: Mixta, Criolla o Colombo ranchera","2 porciones de papa","1 gaseosa 1,5 L"],
         choice:{ label:"Hamburguesas", options:[ {label:"Mixta", ref:["hamburguesas","Mixta"], n:3, unit:"Hamburguesa"}, {label:"Criolla", ref:["hamburguesas","Criolla"], n:3, unit:"Hamburguesa"}, {label:"Colombo ranchera", ref:["hamburguesas","Colombo ranchera"], n:3, unit:"Hamburguesa"} ] } },
-      { name:"Combo 6", img:"combo6", price:60000, parts:["2 hamburguesas con pollo, carne, maíz, baño de queso y tocineta","1 porción de papa","1 pizza personal (sabor a elección)","1 gaseosa 1,5 L"],
-        fixedUnits:{ n:2, unit:"Hamburguesa", desc:"Pollo, carne, maíz, baño de queso y tocineta" }, pizzaPick:true }
+      { name:"Combo 6", img:"combo6", price:60000, parts:["2 hamburguesas con pollo desmechado, carne desmechada, maíz, baño de queso y tocineta","1 porción de papa","1 pizza personal (sabor a elección)","1 gaseosa 1,5 L"],
+        fixedUnits:{ n:2, unit:"Hamburguesa", desc:"Pollo desmechado, carne desmechada, maíz, baño de queso y tocineta" }, pizzaPick:true }
     ]}
 ];
 
@@ -212,7 +212,7 @@ const ING_ALIAS = {
   "1 salchicha":"salchicha", "doble salchicha":"salchicha", "salchicha americana":"salchicha",
   "champinones":"champinon", "pina en trozos":"pina", "chocolate derretido":"chocolate",
   "queso rallado":"queso", "queso fundido":"queso", "bano de queso":"queso", "francesa de maduro":"maduro",
-  "salsa guacamole":"guacamole", "pollo a la plancha":"pollo"
+  "salsa guacamole":"guacamole", "pollo":"pollo desmechado"
 };
 const ING_LABEL = { "carne de hamburguesa":"Carne de hamburguesa", "carne desmechada":"Carne desmechada", "huevo de codorniz":"Huevo de codorniz", "papa chips":"Papa chips",
   "salsa":"Salsas", "champinon":"Champiñón", "pina":"Piña", "huevo frito":"Huevo frito", "maduro":"Maduro", "salchicha":"Salchicha",

@@ -1,7 +1,7 @@
 /* Emily Pizza · service worker: abre rápido y funciona aunque la señal esté mala.
    Sube el número de versión cuando cambies archivos para que los celulares se actualicen. */
-const VERSION = "emily-v1";
-const CORE = ["/", "/index.html", "/menu.js", "/stock.js", "/firebase-config.js", "/manifest.webmanifest",
+const VERSION = "emily-v2";
+const CORE = ["/", "/menu.js", "/stock.js", "/firebase-config.js", "/manifest.webmanifest",
   "/img/logo.webp", "/img/logo-dark.webp", "/img/pizarra.webp", "/img/icon-192.png"];
 
 self.addEventListener("install", e => {
@@ -15,8 +15,10 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET" || url.origin !== location.origin) return; // Firebase, fuentes y WhatsApp van directo
   if (url.pathname.startsWith("/admin")) return;                     // el panel siempre en vivo
   if (req.mode === "navigate") {                                      // páginas: primero internet, si no hay, la copia
-    e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put("/index.html", c)); return r; })
-      .catch(() => caches.match("/index.html")));
+    e.respondWith(fetch(req).then(r => {
+      if (r.ok && !r.redirected) { const c = r.clone(); caches.open(VERSION).then(x => x.put(url.pathname === "/" ? "/" : req, c)); }
+      return r;
+    }).catch(() => caches.match(url.pathname === "/" ? "/" : req).then(hit => hit || caches.match("/"))));
     return;
   }
   if (url.pathname.startsWith("/img/")) {                             // imágenes: copia guardada primero

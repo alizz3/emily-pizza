@@ -13,7 +13,11 @@ Sitio estático, sin build: se despliega tal cual en Vercel.
 | `menu.js` | Menú, precios, horario, favoritos y configuración (`CONFIG`) |
 | `stock.js` | Conexión en vivo con Firebase para los agotados |
 | `firebase-config.js` | Datos del proyecto de Firebase |
-| `firestore.rules` | Quién puede leer y cambiar el inventario |
+| `firestore.rules` | Quién puede leer y cambiar el inventario, y validación de los datos |
+| `privacidad.html`, `terminos.html` | Política de privacidad (Ley 1581) y términos |
+| `404.html` | Página de error con regreso al menú |
+| `vercel.json` | URLs limpias y cabeceras de seguridad |
+| `robots.txt`, `sitemap.xml` | Buscadores (el panel no se indexa) |
 | `manifest.webmanifest`, `sw.js` | App instalable en el celular |
 | `img/` | Logo, fotos, íconos e imagen para compartir |
 
@@ -34,8 +38,27 @@ Si cambias archivos, sube la versión en `sw.js` (`emily-v1` → `emily-v2`) par
 
 El panel queda en `https://emily-pizza.vercel.app/admin.html`.
 
-Mientras `firebase-config.js` esté vacío, la página funciona normal y todo sale disponible.
+Si se borra la configuración de `firebase-config.js`, la página sigue funcionando y todo sale disponible.
 
 ## Enlaces directos
 
 Cualquier sección se puede compartir con `#`: `/#combos`, `/#pizzas`, `/#hamburguesas`, `/#eventos`, `/#visitanos`.
+
+## Checklist de lanzamiento
+
+| Punto | Estado |
+|---|---|
+| Sin secretos en el frontend | ✅ La config de Firebase es pública por diseño; la seguridad está en las reglas |
+| Autenticación + reglas por fila | ✅ Solo correos autorizados y verificados escriben el inventario |
+| Validación del lado del servidor | ✅ Las reglas revisan la forma y el tamaño de cada dato |
+| Rate limiting | ⚠️ Firebase Auth limita intentos de login. Opcional: activar App Check |
+| HTTPS | ✅ Vercel + HSTS |
+| Privacidad y términos | ✅ Revisar con los dueños |
+| Cookies | ✅ Sin cookies de rastreo; el mapa de Google solo carga con permiso |
+| Accesibilidad | ✅ Lighthouse 97–100 |
+| SEO | ✅ Título, descripción, sitemap, robots, datos de restaurante (JSON-LD) |
+| Favicon, Open Graph, 404 | ✅ |
+| Rendimiento | ✅ Imágenes WebP; Lighthouse móvil ~82 |
+| Enlaces rotos | ✅ Revisados |
+| Spam en formularios | ✅ No hay formularios con servidor; todo sale por WhatsApp |
+| Analítica | ⚠️ Activar en Vercel → proyecto → Analytics → Enable |
