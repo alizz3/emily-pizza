@@ -165,7 +165,8 @@ img{display:block}
 .chip.active{border-color:var(--line-2);color:var(--fg);background:var(--gold-soft)}
 
 /* ---------- Carta ---------- */
-main{padding-bottom:120px}
+main{padding-bottom:0}
+body.has-cart main{padding-bottom:84px} /* solo deja espacio cuando aparece la barra del pedido */
 .section{padding-block:36px 4px}
 .banner{position:relative;border-radius:var(--r);overflow:hidden;height:150px;margin-bottom:6px;background:#141210}
 .banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
@@ -535,6 +536,7 @@ const CONFIG = {
   qrBreb: "",             // ej.: "img/qr-breb.png"
   combo: { price: 8500, label: "Arma tu combo", desc: "1 porción de papa + 1 gaseosa 350 ml" },
   vegetales: ["Lechuga","Tomate","Cebolla"],   // qué trae "vegetales" (confirmar con el local)
+  mostrarPagos: false,   // cambiar a true cuando estén los QR de Nequi y Bre-B
   hours: { 0:[12,23], 1:[15,23], 2:[15,23], 3:[15,23], 4:[15,23], 5:[15,23], 6:[12,23] }, // 0=domingo, hora de Bogotá
   // Carrusel del inicio: [categoría, título, texto, imagen]
   destacados: [
@@ -874,7 +876,7 @@ function renderMenu(){
     html += `</section>`;
   }
   $("#menu").innerHTML = html;
-  const nav = [...MENU.map(c=>[c.id,c.name]),["eventos","Eventos"],["pagos","Pagos"],["visitanos","Visítanos"]];
+  const nav = [...MENU.map(c=>[c.id,c.name]),["eventos","Eventos"],...(CONFIG.mostrarPagos?[["pagos","Pagos"]]:[]),["visitanos","Visítanos"]];
   $("#chips").innerHTML = nav.map(([id,n])=>`<button class="chip" type="button" data-go="${id}">${esc(n)}</button>`).join("");
 }
 
@@ -1157,6 +1159,7 @@ function renderMap(){
   }
 }
 function renderQRs(){
+  $("#pagos").hidden = !CONFIG.mostrarPagos;
   if(CONFIG.qrNequi) $("#qrNequi").innerHTML=`<img src="${CONFIG.qrNequi}" alt="Código QR de Nequi">`;
   if(CONFIG.qrBreb) $("#qrBreb").innerHTML=`<img src="${CONFIG.qrBreb}" alt="Código QR de Bre-B">`;
 }
